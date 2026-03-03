@@ -1,0 +1,362 @@
+@use 'sass:map';
+@use '../../../styles/theming/colors' as color;
+@use '../../../styles/theming/sizes' as size;
+@use '../../../styles/utils/mixins' as mixin;
+
+$name: 'UiButton';
+
+$button-sizes: (
+    'sm': (
+        'height': size.rem(36),
+        'padding': size.rem(8),
+        'border-radius': size.rem(6),
+        'icon-size': size.rem(16),
+    ),
+    'md': (
+        'height': size.rem(40),
+        'padding': size.rem(12),
+        'border-radius': size.rem(8),
+        'icon-size': size.rem(18),
+    ),
+    'lg': (
+        'height': size.rem(44),
+        'padding': size.rem(16),
+        'border-radius': size.rem(10),
+        'icon-size': size.rem(20),
+    ),
+);
+
+$button-colors: color.$color-palette;
+$additional-button-colors: (
+    'white': color.get(base-white),
+);
+$button-colors: map.merge($button-colors, $additional-button-colors);
+
+.#{ $name } {
+    @include mixin.inline-flex($gap: size.rem(4));
+    @include mixin.focus-ring;
+    @include mixin.transition-style(extra-fast);
+
+    min-width: var(--button-height);
+    height: var(--button-height);
+    position: relative;
+    border: solid size.rem(1);
+    border-color: var(--button-border-color);
+    font: inherit;
+    cursor: pointer;
+
+    &__host {
+        @include mixin.inline-flex();
+
+        &:has(:disabled) {
+            cursor: not-allowed;
+        }
+    }
+
+    &__icon {
+        --icon-size: var(--button-icon-size);
+    }
+
+    &__label {
+        margin-inline: size.rem(4);
+    }
+
+    .#{ $name } {
+        &__loader {
+            @include mixin.transform(translate(-50%, -50%));
+
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+    }
+
+    @each $size, $value in $button-sizes {
+        &--size-#{ $size } {
+            --button-height: #{map.get($value, height)};
+            --button-padding: #{map.get($value, padding)};
+            --button-border-radius: #{map.get($value, border-radius)};
+            --button-icon-size: #{map.get($value, icon-size)};
+        }
+    }
+
+    &--shape {
+        &-squircle {
+            border-radius: var(--button-border-radius);
+        }
+
+        &-square {
+            border-radius: 0;
+        }
+
+        &-circle {
+            border-radius: calc(var(--button-height) / 2);
+        }
+    }
+
+    &--type {
+        &-icon {
+            padding: 0;
+        }
+
+        &-text {
+            padding-inline: var(--button-padding);
+        }
+    }
+
+    &--shade {
+        &-dark {
+            &.#{$name} {
+                @each $color, $value in $button-colors {
+                    &--color-#{ $color } {
+                        @if $color == 'white' {
+                            --button-color-level-1: #{color.get(base-white)};
+                            --button-color-level-2: transparent;
+                            --button-color-level-3: #{color.get(base-black)};
+
+                            @include mixin.hover {
+                                --button-color-level-1: #{color.alpha(
+                                        base-white,
+                                        0.8
+                                    )};
+                                --button-color-level-2: #{color.alpha(
+                                        base-white,
+                                        0.05
+                                    )};
+                            }
+
+                            @include mixin.active {
+                                --button-color-level-1: #{color.alpha(
+                                        base-white,
+                                        0.6
+                                    )};
+                                --button-color-level-2: #{color.alpha(
+                                        base-white,
+                                        0.1
+                                    )};
+                            }
+                        } @else {
+                            --button-color-level-1: #{color.get(#{$color}-500)};
+                            --button-color-level-2: transparent;
+
+                            @if $color == 'secondary' {
+                                --button-color-level-3: #{color.get(
+                                        system-invert
+                                    )};
+                            } @else {
+                                --button-color-level-3: #{color.get(
+                                        system-base
+                                    )};
+                            }
+
+                            @include mixin.hover {
+                                --button-color-level-1: #{color.get(
+                                        #{$color}-600
+                                    )};
+                                --button-color-level-2: #{color.get(
+                                        #{$color}-50
+                                    )};
+                            }
+
+                            @include mixin.active {
+                                --button-color-level-1: #{color.get(
+                                        #{$color}-700
+                                    )};
+                                --button-color-level-2: #{color.get(
+                                        #{$color}-100
+                                    )};
+                            }
+                        }
+                    }
+                }
+
+                &--variant {
+                    &-filled {
+                        background-color: var(--button-color-level-1);
+                        border-color: var(--button-color-level-1);
+                        color: var(--button-color-level-3);
+                    }
+
+                    &-outlined {
+                        background-color: var(--button-color-level-2);
+                        border-color: var(--button-color-level-1);
+                        color: var(--button-color-level-1);
+                    }
+
+                    &-ghost {
+                        background-color: var(--button-color-level-2);
+                        border-color: var(--button-color-level-2);
+                        color: var(--button-color-level-1);
+                    }
+                }
+            }
+        }
+
+        &-light {
+            &.#{$name} {
+                @each $color, $value in $button-colors {
+                    &--color-#{ $color } {
+                        @if $color == 'white' {
+                            --button-color-level-1: #{color.alpha(
+                                    base-white,
+                                    0.1
+                                )};
+                            --button-color-level-2: #{color.alpha(
+                                    base-white,
+                                    0.1
+                                )};
+                            --button-color-level-3: transparent;
+                            --button-color-level-4: #{color.get(base-white)};
+                            --button-color-level-5: #{color.get(base-white)};
+
+                            @include mixin.hover {
+                                --button-color-level-1: #{color.alpha(
+                                        base-white,
+                                        0.2
+                                    )};
+                                --button-color-level-2: #{color.alpha(
+                                        base-white,
+                                        0.2
+                                    )};
+                                --button-color-level-3: #{color.alpha(
+                                        base-white,
+                                        0.05
+                                    )};
+                            }
+
+                            @include mixin.active {
+                                --button-color-level-1: #{color.alpha(
+                                        base-white,
+                                        0.3
+                                    )};
+                                --button-color-level-2: #{color.alpha(
+                                        base-white,
+                                        0.3
+                                    )};
+                                --button-color-level-3: #{color.alpha(
+                                        base-white,
+                                        0.1
+                                    )};
+                            }
+                        } @else {
+                            --button-color-level-1: #{color.get(#{$color}-50)};
+                            --button-color-level-2: #{color.get(#{$color}-200)};
+                            --button-color-level-3: transparent;
+                            --button-color-level-4: #{color.get(#{$color}-800)};
+                            --button-color-level-5: #{color.get(#{$color}-600)};
+
+                            @include mixin.hover {
+                                --button-color-level-1: #{color.get(
+                                        #{$color}-100
+                                    )};
+                                --button-color-level-2: #{color.get(
+                                        #{$color}-300
+                                    )};
+                                --button-color-level-3: #{color.get(
+                                        #{$color}-50
+                                    )};
+                            }
+
+                            @include mixin.active {
+                                --button-color-level-1: #{color.get(
+                                        #{$color}-200
+                                    )};
+                                --button-color-level-2: #{color.get(
+                                        #{$color}-400
+                                    )};
+                                --button-color-level-3: #{color.get(
+                                        #{$color}-100
+                                    )};
+                            }
+                        }
+                    }
+                }
+
+                &--variant {
+                    &-filled {
+                        background-color: var(--button-color-level-1);
+                        border-color: var(--button-color-level-1);
+                        color: var(--button-color-level-4);
+
+                        &.#{ $name }--color-white {
+                            border-color: transparent;
+                        }
+                    }
+
+                    &-outlined {
+                        background-color: var(--button-color-level-3);
+                        border-color: var(--button-color-level-2);
+                        color: var(--button-color-level-5);
+
+                        &.#{ $name }--color-grey {
+                            color: var(--button-color-level-4);
+                        }
+                    }
+
+                    &-ghost {
+                        background-color: var(--button-color-level-3);
+                        border-color: var(--button-color-level-3);
+                        color: var(--button-color-level-5);
+
+                        &.#{ $name }--color-grey {
+                            &:has(.#{ $name }__label) {
+                                color: var(--button-color-level-4);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &--is {
+        &-disabled,
+        &-loading,
+        &-skeleton {
+            pointer-events: none;
+        }
+
+        &-loading,
+        &-skeleton {
+            .#{ $name } {
+                &__icon,
+                &__label {
+                    opacity: 0;
+                }
+            }
+        }
+
+        &-skeleton {
+            @include mixin.skeleton-loader;
+
+            &.#{$name} {
+                &--variant {
+                    &-filled,
+                    &-outlined,
+                    &-ghost {
+                        background-color: transparent;
+                        border-color: transparent;
+                    }
+                }
+            }
+        }
+
+        &-disabled {
+            &.#{$name} {
+                &--variant {
+                    &-filled,
+                    &-outlined,
+                    &-ghost {
+                        background-color: color.get(grey-300);
+                        border-color: color.get(grey-300);
+                        color: color.get(grey-500);
+
+                        * {
+                            color: color.get(grey-500);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

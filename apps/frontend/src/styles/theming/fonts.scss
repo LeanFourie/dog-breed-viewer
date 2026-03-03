@@ -1,0 +1,35 @@
+// Imports
+@use 'sass:string';
+
+// Variables
+$prefix: 'font';
+
+$primary-font: 'Zalando Sans', 'Inter', 'Roboto Flex', 'Roboto', -apple-system,
+    BlinkMaxSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+    'Open Sans', 'Helvetica Neue', sans-serif;
+
+$secondary-font: 'Inter', 'Roboto Flex', 'Roboto', -apple-system,
+    BlinkMaxSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+    'Open Sans', 'Helvetica Neue', sans-serif;
+
+// Lists
+$font-families: (
+    primary: $primary-font,
+    secondary: $secondary-font,
+);
+
+// Mixins
+@mixin create-font-family-variable($font-name, $font-value) {
+    --#{ $font-name }: #{$font-value};
+}
+
+@mixin generate-font-variables($values: $font-families) {
+    @each $font, $value in $values {
+        @include create-font-family-variable(#{$prefix}-#{$font}, $value);
+    }
+}
+
+// Functions
+@function family($name) {
+    @return var(--#{$prefix}-#{string.unquote($name)});
+}

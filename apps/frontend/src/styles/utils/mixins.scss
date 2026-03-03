@@ -1,0 +1,343 @@
+// Imports
+@use 'sass:map';
+@use '../theming/colors' as color;
+@use '../theming/sizes' as size;
+@use '../theming/transitions' as transition;
+@use './animations.scss' as animation;
+
+// Mixins
+@mixin transition($transition) {
+    transition: $transition;
+    -webkit-transition: $transition;
+    -moz-transition: $transition;
+    -o-transition: $transition;
+}
+
+@mixin transform($transform) {
+    transform: $transform;
+    -webkit-transform: $transform;
+    -moz-transform: $transform;
+    -o-transform: $transform;
+}
+
+@mixin animation($animation) {
+    animation: $animation;
+    -webkit-animation: $animation;
+    -moz-animation: $animation;
+    -o-animation: $animation;
+}
+
+@mixin box-shadow($shadow...) {
+    box-shadow: $shadow;
+    -webkit-box-shadow: $shadow;
+    -moz-box-shadow: $shadow;
+    -o-box-shadow: $shadow;
+}
+
+@mixin skeleton-loader(
+    $before-color: grey-50,
+    $after-color: grey-100,
+    $inset: 0
+) {
+    position: relative;
+    pointer-events: none;
+    overflow: hidden;
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        // inset: $inset;
+        top: $inset;
+        bottom: $inset;
+        right: $inset;
+        left: $inset;
+        border-radius: inherit;
+        z-index: 4;
+    }
+
+    &::before {
+        background-color: color.get($before-color);
+    }
+
+    &::after {
+        background: color.get($after-color);
+
+        @include animation(
+            animation.$shimmer transition.duration('infinite') infinite
+        );
+    }
+}
+
+@mixin flex-styles(
+    $direction: row,
+    $align-items: center,
+    $justify-content: center,
+    $gap: 0
+) {
+    flex-direction: $direction;
+    align-items: $align-items;
+    justify-content: $justify-content;
+    gap: $gap;
+}
+
+@mixin flex(
+    $direction: row,
+    $align-items: center,
+    $justify-content: center,
+    $gap: 0
+) {
+    display: flex;
+
+    @include flex-styles($direction, $align-items, $justify-content, $gap);
+}
+
+@mixin inline-flex(
+    $direction: row,
+    $align-items: center,
+    $justify-content: center,
+    $gap: 0
+) {
+    display: inline-flex;
+
+    @include flex-styles($direction, $align-items, $justify-content, $gap);
+}
+
+@mixin flex-column($align-items: unset, $justify-content: unset, $gap: 0) {
+    @include flex(
+        $direction: column,
+        $align-items: $align-items,
+        $justify-content: $justify-content,
+        $gap: $gap
+    );
+}
+
+@mixin grid-rows($gap: 0) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: size.rem($gap);
+}
+
+@mixin max-width($width) {
+    $sizing: size.rem(map.get(size.$responsive-sizes, $width));
+
+    @media screen and (max-width: $sizing) {
+        @content;
+    }
+}
+
+@mixin min-width($width) {
+    $sizing: size.rem(map.get(size.$responsive-sizes, $width));
+
+    @media screen and (min-width: $sizing) {
+        @content;
+    }
+}
+
+@mixin hover() {
+    &:hover {
+        @include min-width(md) {
+            @content;
+        }
+    }
+}
+
+@mixin active() {
+    &:active {
+        @include min-width(md) {
+            @content;
+        }
+    }
+}
+
+@mixin focus() {
+    &:focus-within {
+        @include min-width(md) {
+            @content;
+        }
+    }
+}
+
+@mixin focus-visible() {
+    &:focus-visible {
+        @include min-width(md) {
+            @content;
+        }
+    }
+}
+
+@mixin hover-active() {
+    @include hover() {
+        @content;
+    }
+    @include active() {
+        @content;
+    }
+}
+
+@mixin hover-focus() {
+    @include hover() {
+        @content;
+    }
+    @include focus() {
+        @content;
+    }
+}
+
+@mixin active-focus() {
+    @include active() {
+        @content;
+    }
+    @include focus() {
+        @content;
+    }
+}
+
+@mixin hover-active-focus() {
+    @include hover() {
+        @content;
+    }
+    @include active() {
+        @content;
+    }
+    @include focus() {
+        @content;
+    }
+}
+
+@mixin font-weight($weight) {
+    font-weight: $weight;
+    font-variation-settings: 'wght' $weight;
+}
+
+@mixin fit-image($fit: contain) {
+    width: 100%;
+    height: 100%;
+    object-fit: $fit;
+    display: block;
+}
+
+@mixin transition-style($name, $property: all, $timing: 'ease-in-cubic') {
+    @include transition(
+        $property transition.duration($name) transition.timing-function($timing)
+    );
+}
+
+@mixin placeholder-style {
+    &::placeholder {
+        @content;
+    }
+    &::-webkit-input-placeholder {
+        @content;
+    }
+    &:-moz-placeholder {
+        @content;
+    }
+    &::-moz-placeholder {
+        @content;
+    }
+    &:-ms-input-placeholder {
+        @content;
+    }
+}
+
+@mixin custom-scrollbar($axes: 'y') {
+    &::-webkit-scrollbar {
+        @if $axes == 'y' {
+            width: var(--scrollbar-width);
+        } @else {
+            height: var(--scrollbar-width);
+        }
+
+        &-track {
+            background: color.get(grey-25);
+
+            @if $axes == 'y' {
+                border-left: solid size.rem(1) color.get(grey-100);
+            } @else {
+                border-top: solid size.rem(1) color.get(grey-100);
+            }
+        }
+
+        &-thumb {
+            @include transition-style($name: 'extra-fast');
+
+            background: color.get(grey-100);
+            border: solid size.rem(1) color.get(grey-300);
+            border-radius: size.rem(8);
+            cursor: grab;
+
+            &:hover {
+                background: color.get(primary-25);
+            }
+
+            &:active {
+                cursor: grabbing;
+            }
+        }
+    }
+}
+
+@mixin list-item-hover(
+    $borderRadius,
+    $initScale: 0.8,
+    $background: primary-50
+) {
+    @include transition-style($name: 'extra-fast');
+
+    position: relative;
+    z-index: 2;
+
+    &::before {
+        @include transition-style($name: 'extra-fast');
+        @include transform(scale($initScale));
+
+        content: '';
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: $borderRadius;
+        background-color: color.get($background);
+        opacity: 0;
+        z-index: -1;
+    }
+
+    &:not(&--is-selected) {
+        @include hover {
+            color: color.get(primary-700);
+        }
+    }
+
+    @include hover {
+        &::before {
+            @include transform(scale(1));
+
+            opacity: 1;
+        }
+    }
+
+    &--is {
+        &-active,
+        &-selected {
+            &::before {
+                @include transform(scale(1));
+
+                opacity: 1;
+            }
+        }
+    }
+}
+
+@mixin focus-ring {
+    outline: solid size.rem(2) transparent;
+
+    @include focus-visible {
+        outline-color: color.get(primary-100);
+    }
+}
+
+@mixin stack-outline {
+    @include box-shadow(0 0 0 size.rem(2) color.get(system-base));
+}

@@ -1,0 +1,55 @@
+// Imports
+@use 'sass:string';
+
+// Lists
+$duration: (
+  'instant':    0ms,
+  'extra-fast': 140ms,
+  'fast':       240ms,
+  'medium':     360ms,
+  'slow':       440ms,
+  'extra-slow': 520ms,
+  'infinite':   1.5s
+);
+
+$timing-function: (
+  'linear':           linear,
+  'ease-in-out':      ease-in-out,
+  'ease-in':          ease-in,
+  'ease-out':         ease-out,
+  'ease-in-drastic':  cubic-bezier(.4, 0, 0, 1),
+  'ease-in-cubic':    cubic-bezier(.65, 0, .35, 1),
+);
+
+$transitions: (
+  'duration': $duration,
+  'timing':   $timing-function,
+);
+
+// Mixins
+@mixin create-transition-variable(
+  $transition-name,
+  $transition-value
+) {
+  --#{ $transition-name }: #{ $transition-value };
+}
+
+@mixin generate-transition-variables {
+  @each $prefix, $transition in $transitions {
+    @each $key, $value in $transition {
+      @include create-transition-variable(
+        #{ $prefix }-#{ $key },
+        $value
+      );
+    }
+  }
+}
+
+// Functions
+@function duration($name) {
+  @return var(--duration-#{ string.unquote($name) });
+}
+
+@function timing-function($name) {
+  @return var(--timing-#{ string.unquote($name) });
+}

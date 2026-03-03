@@ -1,0 +1,99 @@
+@use 'sass:map';
+@use 'sass:list';
+@use '../../../styles/theming/colors' as color;
+@use '../../../styles/theming/sizes' as size;
+@use '../../../styles/utils/animations' as animate;
+@use '../../../styles/utils/mixins' as mixin;
+
+$name: 'UiLoader';
+
+$loader-sizes: (
+    'xs': size.rem(28),
+    'sm': size.rem(48),
+    'md': size.rem(68),
+    'lg': size.rem(88),
+    'xl': size.rem(108),
+);
+$size-keys: map.keys($loader-sizes);
+
+.#{$name} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    pointer-events: none;
+
+    &--type {
+        &-shape {
+            $padding-size: size.rem(4);
+
+            &.#{ $name } {
+                @each $size, $value in $loader-sizes {
+                    $i: list.index($size-keys, $size);
+                    &--size-#{$size} {
+                        padding: calc($padding-size * #{$i});
+                    }
+                }
+            }
+        }
+
+        &-circular {
+            .#{$name} {
+                &__fill {
+                    transform-origin: center;
+                    animation: animate.$ui-loader-circular-translate 1.5s linear
+                            infinite,
+                        animate.$ui-loader-circular-rotate 3s linear infinite;
+                }
+
+                &__base {
+                    transform-origin: center;
+                    animation: animate.$ui-loader-circular-rotate 3s linear
+                        infinite;
+                }
+            }
+        }
+
+        &-dots {
+            .#{$name} {
+                &__ellipse {
+                    width: 16.6%;
+                    aspect-ratio: 1 / 1;
+                    display: block;
+                    position: absolute;
+                    background: currentColor;
+                    border-radius: 50%;
+                    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+
+                    &:nth-child(1) {
+                        left: 10%;
+                        animation: animate.$ui-loader-dots-ellipse-1 0.6s
+                            infinite;
+                    }
+                    &:nth-child(2) {
+                        left: 10%;
+                        animation: animate.$ui-loader-dots-ellipse-2 0.6s
+                            infinite;
+                    }
+                    &:nth-child(3) {
+                        left: 40%;
+                        animation: animate.$ui-loader-dots-ellipse-2 0.6s
+                            infinite;
+                    }
+                    &:nth-child(4) {
+                        left: 70%;
+                        animation: animate.$ui-loader-dots-ellipse-3 0.6s
+                            infinite;
+                    }
+                }
+            }
+        }
+    }
+
+    @each $size, $value in $loader-sizes {
+        &--size-#{ $size } {
+            width: $value;
+            height: $value;
+        }
+    }
+}

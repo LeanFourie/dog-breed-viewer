@@ -1,0 +1,51 @@
+@use '../../../styles/theming/colors' as color;
+@use '../../../styles/theming/sizes' as size;
+@use '../../../styles/utils/mixins' as mixin;
+
+$name: 'UiHelperText';
+
+$helper-text-colors: ('neutral', 'info', 'success', 'warning', 'danger');
+
+.#{ $name } {
+    @include mixin.flex($justify-content: flex-start, $gap: size.rem(8));
+
+    &__icon {
+        @include mixin.flex;
+
+        padding: size.rem(2);
+        border-radius: 50%;
+        aspect-ratio: 1 / 1;
+        color: color.get(system-base);
+
+        &-element {
+            --icon-size: #{size.rem(14)};
+        }
+    }
+
+    @each $color in $helper-text-colors {
+        &--state-#{$color} {
+            .#{ $name } {
+                &__icon {
+                    @if $color == 'neutral' {
+                        background-color: color.get(grey-100);
+                        color: color.get(grey-500);
+                    } @else {
+                        background-color: color.get(#{$color}-500);
+                    }
+                }
+            }
+        }
+    }
+
+    &--is {
+        &-skeleton {
+            .#{ $name } {
+                &__icon {
+                    @include mixin.skeleton-loader;
+
+                    background-color: transparent;
+                }
+            }
+        }
+    }
+}

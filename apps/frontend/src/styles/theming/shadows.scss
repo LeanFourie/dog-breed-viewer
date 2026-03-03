@@ -1,0 +1,55 @@
+// Imports
+@use 'sass:string';
+@use 'sass:map';
+
+// Variables
+$spacial-size: .25rem;
+$prefix: 'shadow';
+
+$shadow-sizes: (
+  xs: calc(#{ $spacial-size } * 1),
+  sm: calc(#{ $spacial-size } * 2),
+  md: calc(#{ $spacial-size } * 3),
+  lg: calc(#{ $spacial-size } * 4),
+  xl: calc(#{ $spacial-size } * 5)
+);
+
+// Blur
+$shadow-blur: (
+  xs: calc(#{ $spacial-size } * 2),
+  sm: calc(#{ $spacial-size } * 4),
+  md: calc(#{ $spacial-size } * 6),
+  lg: calc(#{ $spacial-size } * 8),
+  xl: calc(#{ $spacial-size } * 10)
+);
+
+// Props
+$shadow-props: (
+  xs: 0 map.get($shadow-sizes, xs) map.get($shadow-blur, xs),
+  sm: 0 map.get($shadow-sizes, sm) map.get($shadow-blur, sm),
+  md: 0 map.get($shadow-sizes, md) map.get($shadow-blur, md),
+  lg: 0 map.get($shadow-sizes, lg) map.get($shadow-blur, lg),
+  xl: 0 map.get($shadow-sizes, xl) map.get($shadow-blur, xl)
+);
+
+// Mixins
+@mixin create-shadow-variable(
+  $shadow-name,
+  $shadow-value
+) {
+  --#{ $shadow-name }: #{ $shadow-value };
+}
+
+@mixin generate-shadow-variables {
+  @each $shadow, $value in $shadow-props {
+    @include create-shadow-variable(
+      #{ $prefix }-#{ $shadow },
+      $value
+    );
+  }
+}
+
+// Functions
+@function get($name) {
+  @return var(--#{ $prefix }-#{ string.unquote($name) });
+}

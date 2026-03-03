@@ -1,0 +1,172 @@
+@use 'sass:list';
+@use '../../../styles/theming/sizes' as size;
+@use '../../../styles/utils/mixins' as mixin;
+
+$name: 'UiText';
+
+$font-semantic-size: ('sm', 'md', 'lg');
+
+$font-variant: (
+    'h1': (
+        'sm': (
+            size.rem(60),
+            1.2,
+        ),
+        'md': (
+            size.rem(64),
+            1.2,
+        ),
+        'lg': (
+            size.rem(68),
+            1.2,
+        ),
+    ),
+    'h2': (
+        'sm': (
+            size.rem(48),
+            1.2,
+        ),
+        'md': (
+            size.rem(52),
+            1.2,
+        ),
+        'lg': (
+            size.rem(56),
+            1.2,
+        ),
+    ),
+    'h3': (
+        'sm': (
+            size.rem(36),
+            1.2,
+        ),
+        'md': (
+            size.rem(40),
+            1.2,
+        ),
+        'lg': (
+            size.rem(44),
+            1.2,
+        ),
+    ),
+    'h4': (
+        'sm': (
+            size.rem(24),
+            1.2,
+        ),
+        'md': (
+            size.rem(28),
+            1.2,
+        ),
+        'lg': (
+            size.rem(32),
+            1.2,
+        ),
+    ),
+    'h5': (
+        'sm': (
+            size.rem(18),
+            1.2,
+        ),
+        'md': (
+            size.rem(20),
+            1.2,
+        ),
+        'lg': (
+            size.rem(22),
+            1.2,
+        ),
+    ),
+    'h6': (
+        'sm': (
+            size.rem(12),
+            1.2,
+        ),
+        'md': (
+            size.rem(14),
+            1.2,
+        ),
+        'lg': (
+            size.rem(16),
+            1.2,
+        ),
+    ),
+    'p': (
+        'sm': (
+            size.rem(14),
+            1.4,
+        ),
+        'md': (
+            size.rem(16),
+            1.4,
+        ),
+        'lg': (
+            size.rem(18),
+            1.4,
+        ),
+    ),
+    'label': (
+        'sm': (
+            size.rem(14),
+            1,
+        ),
+        'md': (
+            size.rem(16),
+            1,
+        ),
+        'lg': (
+            size.rem(18),
+            1,
+        ),
+    ),
+);
+
+$font-weight: (
+    'thin': 100,
+    'extra-light': 200,
+    'light': 300,
+    'regular': 400,
+    'medium': 500,
+    'semi-bold': 600,
+    'bold': 700,
+    'extra-bold': 800,
+    'black': 900,
+);
+
+.UiText {
+    margin: 0;
+    color: inherit;
+    line-height: var(--text-line-height);
+    font-size: var(--text-font-size);
+
+    @each $variant, $value in $font-variant {
+        @each $size, $val in $value {
+            &--variant-#{ $variant } {
+                &.#{ $name }--size-#{ $size } {
+                    --text-font-size: #{list.nth($val, 1)};
+                    --text-line-height: #{list.nth($val, 2)};
+                }
+            }
+        }
+    }
+
+    &--weight {
+        @each $weight, $value in $font-weight {
+            &-#{ $weight } {
+                @include mixin.font-weight($value);
+            }
+        }
+    }
+
+    &--is {
+        &-skeleton {
+            @include mixin.skeleton-loader;
+        }
+
+        &-truncated {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}

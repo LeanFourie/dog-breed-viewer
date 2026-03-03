@@ -1,0 +1,224 @@
+// Imports
+@use 'sass:string';
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:map';
+
+// Variables
+$color-primary: (
+    25: #f7f6ff,
+    50: #efecfe,
+    100: #e0d9fd,
+    200: #c1b3fb,
+    300: #a18efa,
+    400: #8268f8,
+    500: #6342f6,
+    600: #4f35c5,
+    700: #3b2894,
+    800: #281a62,
+    900: #140d31,
+);
+
+$color-secondary: (
+    25: #fcfff5,
+    50: #f9feea,
+    100: #f4fed6,
+    200: #eefdc1,
+    300: #e3fd98,
+    400: #d6fb65,
+    500: #c8fa32,
+    600: #aeda32,
+    700: #95ba31,
+    800: #739031,
+    900: #506631,
+);
+
+$color-tertiary: (
+    25: #e8fbff,
+    50: #c9f4ff,
+    100: #97dff2,
+    200: #78d6ed,
+    300: #58cce9,
+    400: #38c3e5,
+    500: #1db7dd,
+    600: #1db7dd,
+    700: #137b95,
+    800: #0f5d71,
+    900: #0a3f4d,
+);
+
+$color-info: (
+    25: #f5f9ff,
+    50: #ebf2ff,
+    100: #d8e5ff,
+    200: #b1cbff,
+    300: #8ab1ff,
+    400: #6397ff,
+    500: #3c7dff,
+    600: #3064cc,
+    700: #244b99,
+    800: #183266,
+    900: #0c1933,
+);
+
+$color-success: (
+    25: #f7fcf3,
+    50: #effae7,
+    100: #dff5cf,
+    200: #c0ea9f,
+    300: #a0e06e,
+    400: #81d53e,
+    500: #61cb0e,
+    600: #4ea20b,
+    700: #3a7a08,
+    800: #275106,
+    900: #132903,
+);
+
+$color-warning: (
+    25: #fff9f7,
+    50: #fff3ef,
+    100: #ffe8df,
+    200: #ffd1c0,
+    300: #ffb9a0,
+    400: #ffa281,
+    500: #ff8b61,
+    600: #cc6f4e,
+    700: #99533a,
+    800: #663827,
+    900: #331c13,
+);
+
+$color-danger: (
+    25: #fff4f6,
+    50: #feeaee,
+    100: #fed5dc,
+    200: #fdabb9,
+    300: #fb8097,
+    400: #fa5674,
+    500: #f92c51,
+    600: #c72341,
+    700: #951a31,
+    800: #641220,
+    900: #320910,
+);
+
+$color-grey: (
+    25: #f9fafb,
+    50: #ecf0f4,
+    100: #d6dee6,
+    200: #c2cfdb,
+    300: #b9c7d5,
+    400: #a6b8c9,
+    500: #8fa6bc,
+    600: #56738f,
+    700: #435970,
+    800: #263340,
+    900: #1d2630,
+);
+
+$color-system: (
+    base: #ffffff,
+    invert: #1d2630,
+);
+
+$color-base: (
+    white: #ffffff,
+    black: #000000,
+);
+
+$color-palette: (
+    'primary': $color-primary,
+    'secondary': $color-secondary,
+    'tertiary': $color-tertiary,
+    'info': $color-info,
+    'success': $color-success,
+    'warning': $color-warning,
+    'danger': $color-danger,
+    'grey': $color-grey,
+    'system': $color-system,
+    'base': $color-base,
+);
+
+// Mixins
+@mixin create-color-variable($color-name, $color-value) {
+    --#{ $color-name }: #{$color-value};
+}
+
+@mixin create-rgb-color-variable($color-name, $color-value) {
+    @include create-color-variable($color-name, $color-value);
+
+    --#{ $color-name }-r: #{color.channel($color-value, 'red', $space: rgb)};
+    --#{ $color-name }-g: #{color.channel($color-value, 'green', $space: rgb)};
+    --#{ $color-name }-b: #{color.channel($color-value, 'blue', $space: rgb)};
+}
+
+@mixin generate-color-variables($values: $color-palette) {
+    [data-theme='light'] {
+        @each $prefix, $value in $values {
+            @each $color, $color-value in $value {
+                @include create-rgb-color-variable(
+                    #{$prefix}-#{$color},
+                    $color-value
+                );
+            }
+        }
+    }
+
+    [data-theme='dark'] {
+        @each $prefix, $value in $values {
+            @if $prefix == 'base' {
+                @each $color, $color-value in $value {
+                    @include create-rgb-color-variable(
+                        #{$prefix}-#{$color},
+                        $color-value
+                    );
+                }
+            } @else {
+                $swapped-palette: reverse($value);
+                @each $color, $color-value in $swapped-palette {
+                    @include create-rgb-color-variable(
+                        #{$prefix}-#{$color},
+                        $color-value
+                    );
+                }
+            }
+        }
+    }
+}
+
+// Functions
+@function reverse($val) {
+    $names: ();
+    $values: ();
+    $result: ();
+
+    @each $name, $value in $val {
+        $names: list.append($names, $name);
+        $values: list.append($values, $value);
+    }
+
+    @for $i from 1 through list.length($names) {
+        $result: map.merge(
+            $result,
+            (
+                list.nth($names, $i): list.nth($values, -$i),
+            )
+        );
+    }
+
+    @return $result;
+}
+
+@function get($name) {
+    @return var(--#{string.unquote($name)});
+}
+
+@function alpha($name, $alpha: 1) {
+    @return rgba(
+        var(--#{string.unquote($name)}-r),
+        var(--#{string.unquote($name)}-g),
+        var(--#{string.unquote($name)}-b),
+        $alpha
+    );
+}

@@ -1,0 +1,36 @@
+@use '../../../styles/theming/colors' as color;
+@use '../../../styles/theming/sizes' as size;
+@use '../../../styles/utils/mixins' as mixin;
+
+$name: 'UiFormWrapper';
+
+.#{ $name } {
+    @include mixin.grid-rows($gap: 8);
+
+    &__label {
+        @include mixin.flex($justify-content: flex-start);
+
+        &-required-marker {
+            @include mixin.transform(translateY(size.rem(4)));
+
+            display: inline-block;
+            color: color.get(danger-500);
+        }
+
+        &-optional-marker {
+            padding-left: size.rem(4);
+            color: color.get(grey-500);
+        }
+
+        &-count {
+            margin-left: auto;
+            color: color.get(grey-500);
+        }
+    }
+
+    &__helpers {
+        @include mixin.grid-rows($gap: 4);
+
+        padding-top: size.rem(4);
+    }
+}
