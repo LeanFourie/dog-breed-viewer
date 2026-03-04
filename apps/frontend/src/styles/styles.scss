@@ -5,10 +5,6 @@
 @use './theming/transitions' as transition;
 @use './utils/mixins' as mixin;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
-
 @mixin selection-styles-scoped() {
     color: color.get(primary-800);
     background: color.get(primary-50);
@@ -16,6 +12,12 @@
 
 * {
     box-sizing: border-box;
+    scrollbar-width: none;
+     -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 html {
@@ -30,10 +32,6 @@ html {
 }
 
 body {
-    @include mixin.custom-scrollbar;
-
-    --scrollbar-width: #{size.rem(10)};
-
     margin: 0;
     color: color.get(grey-800);
 

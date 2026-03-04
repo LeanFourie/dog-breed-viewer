@@ -1,0 +1,14 @@
+@use '../../../styles/theming/colors' as color;
+@use '../../../styles/theming/sizes' as size;
+@use '../../../styles/utils/mixins' as mixin;
+
+$name: 'UiFallbackLoader';
+
+.#{ $name } {
+    @include mixin.flex;
+
+    width: 100svw;
+    height: 100svh;
+    background-color: color.get(system-base);
+    color: color.get(grey-900);
+}

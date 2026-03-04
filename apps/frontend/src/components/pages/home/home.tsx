@@ -1,29 +1,12 @@
 'use client'
 
-import { type DogBreedsResponse } from '../../../utils/models/dog-breeds'
-import { fetchJson } from '../../../utils/methods/api'
-import {
-    capitalizeFirstLetter,
-    stringToKey,
-} from '../../../utils/methods/strings'
+import { PageHomeBreedList } from './components'
+import css from './home.module.scss'
 import Lenis from 'lenis'
-import { use, Suspense, useEffect } from 'react'
-import { UiLoader } from '../../base/ui-loader/ui-loader'
-
-const dogBreedData = fetchJson<DogBreedsResponse>(
-    `${import.meta.env.VITE_API_BASE_URL}/breeds/list/all`
-)
+import { useEffect } from 'react'
 
 function PageHome() {
-    const _dogBreedData = use(dogBreedData)
-
-    const flattenedBreeds = Object.entries(_dogBreedData.message)
-        .flatMap(([breed, subBreeds]) => {
-            return subBreeds.length > 0
-                ? subBreeds.map((sub) => `${sub} ${breed}`)
-                : [breed]
-        })
-        .sort()
+    const name = `PageHome`
 
     useEffect(() => {
         const lenis = new Lenis({
@@ -43,16 +26,8 @@ function PageHome() {
     }, [])
 
     return (
-        <div>
-            <Suspense fallback={<UiLoader size={'lg'} type={'circular'} />}>
-                <div>
-                    {flattenedBreeds.map((item, index) => (
-                        <div key={`${stringToKey(item)}-${index}`}>
-                            {capitalizeFirstLetter(item)}
-                        </div>
-                    ))}
-                </div>
-            </Suspense>
+        <div className={css[name]}>
+            <PageHomeBreedList />
         </div>
     )
 }
