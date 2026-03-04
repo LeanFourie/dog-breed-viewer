@@ -1,0 +1,8 @@
+@use '../styles/theming/colors' as color;
+
+$name: 'App';
+
+.#{ $name } {
+    background-color: color.get(system-base);
+    color: color.get(system-invert);
+}

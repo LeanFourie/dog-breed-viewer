@@ -7,8 +7,10 @@ import {
     PageHomeSearch,
 } from './components'
 import css from './home.module.scss'
-import Lenis from 'lenis'
+// import Lenis from 'lenis'
 import { use, useEffect } from 'react'
+
+const HOME_SCROLL_POSITION_KEY = 'home-scroll-position'
 
 function PageHome() {
     const breedsContext = use(BreedsContext)
@@ -20,20 +22,19 @@ function PageHome() {
     }
 
     useEffect(() => {
-        const lenis = new Lenis({
-            infinite: true,
+        const savedScrollPosition = sessionStorage.getItem(
+            HOME_SCROLL_POSITION_KEY
+        )
+        if (!savedScrollPosition) return
+
+        const scrollTop = Number(savedScrollPosition)
+        if (Number.isNaN(scrollTop)) return
+
+        requestAnimationFrame(() => {
+            window.scrollTo({ top: scrollTop })
         })
 
-        function raf(time: number) {
-            lenis.raf(time)
-            requestAnimationFrame(raf)
-        }
-
-        requestAnimationFrame(raf)
-
-        return () => {
-            lenis.destroy()
-        }
+        sessionStorage.removeItem(HOME_SCROLL_POSITION_KEY)
     }, [])
 
     return (

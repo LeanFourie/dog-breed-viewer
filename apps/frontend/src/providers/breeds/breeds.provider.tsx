@@ -11,21 +11,24 @@ import {
 } from 'react'
 import { fetchJson } from '../../utils/methods/api'
 import {
-    type DogBreedImageResponse,
-    type DogBreedsResponse,
-} from '../../utils/models/dog-breeds'
+    type IDogBreedsApiResponse,
+    type TDogBreedsMessage,
+    type TDogBreedImageMessage,
+    type TDogBreedImagesMessage,
+} from '../../utils/models/dog-breeds.model'
 import { trimLowercase } from '../../utils/methods/strings'
 
 export const BreedsContext = createContext<IBreedsContext | null>(null)
 
 const fetchDogBreedDataPromise = () =>
-    fetchJson<DogBreedsResponse>({
+    fetchJson<IDogBreedsApiResponse<TDogBreedsMessage>>({
         url: `${import.meta.env.VITE_API_BASE_URL}/breeds/list/all`,
     })
 
 const initialDogBreedDataPromise = fetchDogBreedDataPromise()
+
 const fetchDogBreedImage = (breed: string) =>
-    fetchJson<DogBreedImageResponse>({
+    fetchJson<IDogBreedsApiResponse<TDogBreedImageMessage>>({
         url: `${
             import.meta.env.VITE_API_BASE_URL
         }/breed/${breed}/images/random`,
@@ -57,6 +60,9 @@ const BreedsProvider = ({ children }: React.PropsWithChildren) => {
 
     // #region - States
     const [_breedImages, _setBreedImages] = useState<Record<string, string>>({})
+    const [_breedImageArray, _setBreedImageArray] = useState<
+        Record<string, string[]>
+    >({})
     const [_loadingImages, _setLoadingImages] = useState<Set<string>>(new Set())
     const [_filteredDogBreedList, _setFilteredDogBreedList] =
         useState(dogBreedList)
@@ -113,6 +119,37 @@ const BreedsProvider = ({ children }: React.PropsWithChildren) => {
             )
         )
     }
+
+    const fetchDogBreedImages = async (breed: string) => {
+        if (_breedImageArray[breed]) return _breedImageArray[breed]
+
+        try {
+            const formattedBreed = breed.includes('-')
+                ? `${breed.split('-')[1]}/${breed.split('-')[0]}`
+                : breed
+
+            const res = await fetchJson<
+                IDogBreedsApiResponse<TDogBreedImagesMessage>
+            >({
+                url: `${
+                    import.meta.env.VITE_API_BASE_URL
+                }/breed/${formattedBreed}/images/random/3`,
+            })
+
+            if (!res.ok) return undefined
+
+            _setBreedImageArray((prev) => ({
+                ...prev,
+                [breed]: res.data.message,
+            }))
+
+            return res.data.message
+        } catch (error) {
+            console.error('Failed to fetch breed images', error)
+
+            return undefined
+        }
+    }
     // #endregion
 
     // #region - Effects
@@ -133,9 +170,11 @@ const BreedsProvider = ({ children }: React.PropsWithChildren) => {
         dogBreedListError,
         filteredDogBreedList: _filteredDogBreedList,
         breedImages: _breedImages,
+        breedImageArray: _breedImageArray,
         getBreedImage,
         searchBreedList,
         retryDogBreedList,
+        fetchDogBreedImages,
     }
     // #endregion
 

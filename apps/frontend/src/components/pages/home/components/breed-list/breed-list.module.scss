@@ -25,7 +25,7 @@ $name: 'PageHomeBreedList';
         padding: 0;
         border: none;
         background-color: transparent;
-        color: color.get(system-base);
+        color: color.get(system-invert);
         font-family: font.family(secondary), 'sans-serif';
         opacity: 0.5;
         z-index: 2;
@@ -57,12 +57,17 @@ $name: 'PageHomeBreedList';
         }
 
         &::before {
-            background: linear-gradient(to right, color.alpha(grey-900, .8), color.alpha(grey-900, .4));
+            background: linear-gradient(
+                to right,
+                color.alpha(system-base, 1),
+                color.alpha(system-base, 0.4)
+            );
         }
 
         &::after {
-            background-color: color.get(grey-900);
-            mix-blend-mode: soft-light;
+            background-color: color.get(system-base);
+            // mix-blend-mode: color-burn;
+            opacity: 0.5;
         }
     }
 }

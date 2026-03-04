@@ -1,0 +1,24 @@
+@use '../../../styles/theming/colors' as color;
+@use '../../../styles/theming/fonts' as font;
+@use '../../../styles/theming/sizes' as size;
+@use '../../../styles/utils/mixins' as mixin;
+
+$name: 'PageBreed';
+
+.#{ $name } {
+    min-height: 100svh;
+
+    &__images {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    &__image {
+        width: 100%;
+        max-width: 600px;
+        aspect-ratio: 1;
+        border-radius: 1rem;
+        overflow: hidden;
+        background-color: var(--color-surface-2);
+    }
+}

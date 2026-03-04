@@ -13,7 +13,7 @@
 * {
     box-sizing: border-box;
     scrollbar-width: none;
-     -ms-overflow-style: none;
+    -ms-overflow-style: none;
 
     &::-webkit-scrollbar {
         display: none;
@@ -28,7 +28,6 @@ html {
     @include transition.generate-transition-variables();
 
     font-family: font.family(primary), 'sans-serif';
-    scroll-behavior: smooth;
 }
 
 body {

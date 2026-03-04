@@ -6,10 +6,15 @@ import {
 import { UiImage } from '../../../../base/ui-image/ui-image'
 import { UiText } from '../../../../base/ui-text/ui-text'
 import css from './breed-list.module.scss'
-import { use, useEffect, useRef, useState } from 'react'
+import { use, useEffect, useRef, useState, startTransition } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ROUTES } from '../../../../../utils/routes/routes'
+
+const HOME_SCROLL_POSITION_KEY = 'home-scroll-position'
 
 function PageHomeBreedList() {
     const breedsContext = use(BreedsContext)
+    const navigate = useNavigate()
 
     const name = `PageHomeBreedList`
 
@@ -108,6 +113,19 @@ function PageHomeBreedList() {
                         `}
                         key={`${stringToKey(item)}-${index}`}
                         data-breed={item}
+                        onClick={() => {
+                            if (window) {
+                                sessionStorage.setItem(
+                                    HOME_SCROLL_POSITION_KEY,
+                                    String(window.scrollY)
+                                )
+                            }
+                            startTransition(() => {
+                                navigate(ROUTES.Breed(stringToKey(item)), {
+                                    preventScrollReset: true,
+                                })
+                            })
+                        }}
                     >
                         <UiText renderAs="span" size="lg" variant="h1">
                             {capitalizeFirstLetter(item)}

@@ -11,6 +11,7 @@ const SUB_ROUTES = {
 
 const DYNAMIC_ROUTES = {
     Breed: (id: string) => `${BASE_ROUTES.Breeds}/${id}`,
+    BreedDetail: `${BASE_ROUTES.Breeds}/:id`,
 } as const
 
 const ROUTES = {

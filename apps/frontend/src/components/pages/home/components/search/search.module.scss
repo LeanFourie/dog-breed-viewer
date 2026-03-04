@@ -12,8 +12,8 @@ $name: 'PageHomeSearch';
     padding: size.rem(32) size.rem(20);
     background: linear-gradient(
         to bottom,
-        color.get(system-invert),
-        color.alpha(system-invert, 0)
+        color.get(system-base),
+        color.alpha(system-base, 0)
     );
     z-index: 10;
 
@@ -22,17 +22,18 @@ $name: 'PageHomeSearch';
         appearance: none;
         -webkit-appearance: none;
         padding: size.rem(16) size.rem(20);
-        background-color: color.alpha(system-base, 0.1);
-        border: solid size.rem(1) color.get(system-base);
+        background-color: color.alpha(system-invert, 0.1);
+        border: solid size.rem(1) color.get(system-invert);
+        border-radius: size.rem(8);
         outline: none;
         backdrop-filter: blur(size.rem(6));
-        color: color.get(system-base);
+        color: color.get(system-invert);
         font-size: size.rem(16);
 
         @include mixin.placeholder-style {
             @include mixin.transition-style(extra-fast);
 
-            color: color.get(system-base);
+            color: color.get(system-invert);
             opacity: 0.6;
             transform-origin: center left;
         }
