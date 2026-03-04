@@ -6,6 +6,7 @@
 $name: 'PageHomeBreedList';
 
 .#{ $name } {
+    padding-top: size.rem(100);
     padding-inline-start: size.rem(20);
 
     &__inner {

@@ -1,9 +1,28 @@
-async function fetchJson<T>(url: string): Promise<T> {
-    const res = await fetch(url)
+type ApiResult<T> = { ok: true; data: T } | { ok: false; error: string }
 
-    if (!res.ok) throw new Error('Network response was not ok')
+async function fetchJson<T>({
+    url,
+    options,
+}: {
+    url: string
+    options?: RequestInit
+}): Promise<ApiResult<T>> {
+    try {
 
-    return res.json() as Promise<T>
+        const res = await fetch(url, options)
+
+        if (!res.ok) {
+            return { ok: false, error: res.statusText }
+        }
+
+        const data = await res.json()
+
+        // throw new Error('Forced error for testing')
+
+        return { ok: true, data }
+    } catch (error) {
+        return { ok: false, error: error instanceof Error ? error.message : 'Unknown error' }
+    }
 }
 
 export { fetchJson }

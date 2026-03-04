@@ -46,7 +46,7 @@ function PageHomeBreedList() {
         })
 
         return () => observer.disconnect()
-    }, [])
+    }, [breedsContext?.filteredDogBreedList])
 
     useEffect(() => {
         if (!_highlightedBreed || !breedsContext) return
@@ -89,7 +89,7 @@ function PageHomeBreedList() {
     return (
         <div className={css[name]}>
             <div className={css[`${name}__inner`]}>
-                {breedsContext?.dogBreedList.map((item, index) => (
+                {breedsContext?.filteredDogBreedList.map((item, index) => (
                     <button
                         ref={(el) => {
                             if (el) {

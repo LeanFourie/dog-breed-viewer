@@ -1,12 +1,23 @@
 'use client'
 
-import { PageHomeBreedList } from './components'
+import { BreedsContext } from '../../../providers'
+import {
+    PageHomeBreedList,
+    PageHomePageError,
+    PageHomeSearch,
+} from './components'
 import css from './home.module.scss'
 import Lenis from 'lenis'
-import { useEffect } from 'react'
+import { use, useEffect } from 'react'
 
 function PageHome() {
+    const breedsContext = use(BreedsContext)
+
     const name = `PageHome`
+
+    const handleRetry = () => {
+        breedsContext?.retryDogBreedList()
+    }
 
     useEffect(() => {
         const lenis = new Lenis({
@@ -27,7 +38,17 @@ function PageHome() {
 
     return (
         <div className={css[name]}>
-            <PageHomeBreedList />
+            {breedsContext?.dogBreedListError ? (
+                <PageHomePageError
+                    onRetryClick={handleRetry}
+                    message={breedsContext?.dogBreedListError}
+                />
+            ) : (
+                <>
+                    <PageHomeSearch />
+                    <PageHomeBreedList />
+                </>
+            )}
         </div>
     )
 }

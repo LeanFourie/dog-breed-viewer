@@ -1,0 +1,16 @@
+@use '../../../../../styles/theming/colors' as color;
+@use '../../../../../styles/theming/sizes' as size;
+@use '../../../../../styles/utils/mixins' as mixin;
+
+$name: 'PageHomePageError';
+
+.#{ $name } {
+    @include mixin.flex-column(
+        $gap: size.rem(20),
+        $align-items: center,
+        $justify-content: center
+    );
+
+    width: 100svw;
+    height: 100svh;
+}
