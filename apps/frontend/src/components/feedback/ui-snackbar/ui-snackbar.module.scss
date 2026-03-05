@@ -1,0 +1,38 @@
+@use '../../../styles/theming/colors' as color;
+@use '../../../styles/theming/sizes' as size;
+@use '../../../styles/theming/transitions' as transition;
+@use '../../../styles/utils/animations' as animation;
+@use '../../../styles/utils/mixins' as mixin;
+
+$name: 'UiSnackbar';
+
+.#{ $name } {
+    @include mixin.flex($gap: size.rem(12));
+    @include mixin.animation(
+        animation.$snackbar-reveal transition.duration('fast')
+            transition.timing-function('ease-in-cubic')
+    );
+
+    max-width: size.rem(260);
+    position: fixed;
+    bottom: size.rem(16);
+    right: size.rem(16);
+    padding: size.rem(4) size.rem(4) size.rem(4) size.rem(16);
+    border-radius: size.rem(8);
+    color: color.get(system-base);
+    z-index: 100;
+
+    &__message {
+        flex: 1;
+    }
+
+    &--state {
+        &-neutral {
+            background-color: color.get(grey-800);
+        }
+
+        &-danger {
+            background-color: color.get(danger-500);
+        }
+    }
+}

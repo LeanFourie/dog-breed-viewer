@@ -15,9 +15,22 @@ const UiImageComponent = ({
     src,
     style = {},
 }: TUiImageProps) => {
+    // #region - Variables
+    /**
+     * The name of the component used for styling and identification in the DOM inspector.
+     */
     const name = `UiImage`
-    const [_loaded, _setLoaded] = useState(false)
+    // #endregion
 
+    // #region - States
+    /**
+     * Sets the loading state for the image.
+     * This manages the visibility of the main and placeholder images.
+     */
+    const [_loaded, _setLoaded] = useState(false)
+    // #endregion
+
+    // #region - Markup
     return (
         <div
             className={`
@@ -38,7 +51,7 @@ const UiImageComponent = ({
             `}
             style={style}
         >
-            {/* Placeholder / blurred image */}
+            {/* Placeholder (Blurred Image) */}
             {placeholder ? (
                 <img
                     alt={alt}
@@ -48,8 +61,9 @@ const UiImageComponent = ({
                     aria-hidden="true"
                 />
             ) : null}
+            {/* ./Placeholder (Blurred Image) */}
 
-            {/* Main image */}
+            {/* Main Image */}
             <img
                 onLoad={() => _setLoaded(true)}
                 alt={alt}
@@ -58,8 +72,10 @@ const UiImageComponent = ({
                 src={src}
                 style={{ opacity: _loaded ? 1 : 0 }}
             />
+            {/* ./Main Image */}
         </div>
     )
+    // #endregion
 }
 
 export const UiImage = memo(UiImageComponent)

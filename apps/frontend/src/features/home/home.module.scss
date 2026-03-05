@@ -1,0 +1,16 @@
+@use '../../styles/utils/mixins' as mixin;
+
+$name: 'PageHome';
+
+.#{ $name } {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+
+    &__loader {
+        @include mixin.flex;
+
+        width: 100svw;
+        height: 100svh;
+    }
+}

@@ -44,11 +44,19 @@ type TUiShape = 'square' | 'circle' | 'squircle'
  * The available semantic states.
  */
 type TSemanticState = 'neutral' | TSemanticColor
+/**
+ * A helper type that extracts values from objects.
+ */
 type TValueOf<T> = T[keyof T]
+/**
+ * A helper type that sets the correct type for API responses.
+ */
+type ApiResult<T> = { ok: true; data: T } | { ok: false; error: string }
 // #endregion
 
 // #region - Exports
 export type {
+    ApiResult,
     TColor,
     TNeutralColor,
     TSemanticColor,
@@ -60,6 +68,6 @@ export type {
     TUiShape,
     TUiVariant,
     TSemanticState,
-    TValueOf
+    TValueOf,
 }
 // #endregion

@@ -1,8 +1,8 @@
 'use client'
 
 import { UiIcon } from '../../base/ui-icon/ui-icon'
-import { UiLoader } from '../../base/ui-loader/ui-loader'
 import { UiText } from '../../base/ui-text/ui-text'
+import { UiLoader } from '../../feedback/ui-loader/ui-loader'
 import {
     type TUiButtonClickEvent,
     type TUiButtonProps,
@@ -11,6 +11,8 @@ import css from './ui-button.module.scss'
 import { Link } from 'react-router-dom'
 
 function UiButton(props: TUiButtonProps) {
+    // #region - Props
+    // The props are extracted here so we can dynamically render the correct props.
     const {
         label,
         color = 'primary',
@@ -24,8 +26,16 @@ function UiButton(props: TUiButtonProps) {
         className = '',
         style = {},
     } = props
+    // #endregion
 
+    // #region - Variables
+    /**
+     * The name of the component used for styling and identification in the DOM inspector.
+     */
     const name = `UiButton`
+    /**
+     * The list of dynamic classes to render on the component based on the provided props.
+     */
     const classes = `
         ${css[name]}
         ${css[`${name}--color-${color}`]}
@@ -39,7 +49,9 @@ function UiButton(props: TUiButtonProps) {
         ${isSkeleton ? css[`${name}--is-skeleton`] : ''}
         ${className}
     `
-
+    /**
+     * The child content to render for the component
+     */
     const content = (
         <>
             {props.type === 'icon' ? (
@@ -96,8 +108,11 @@ function UiButton(props: TUiButtonProps) {
             ) : null}
         </>
     )
+    // #endregion
 
+    // #region - Markup
     switch (props.tag) {
+        // The anchor link type button wrapper component
         case 'a': {
             const { href, target = '_self' } = props
 
@@ -113,6 +128,7 @@ function UiButton(props: TUiButtonProps) {
             )
         }
 
+        // The router link type button wrapper component
         case 'link': {
             const { to } = props
 
@@ -123,10 +139,16 @@ function UiButton(props: TUiButtonProps) {
             )
         }
 
+        // The button type button wrapper component
         case 'button': {
             const { onClick, action } = props
 
+            /**
+             * Handles click events on the button component.
+             * @param event - The event emitted from the button click.
+             */
             const handleClick = (event: TUiButtonClickEvent): void => {
+                // Ensure the click event is not triggered when the button should not be clickable
                 if (!onClick || isDisabled || isLoading || isSkeleton) return
 
                 onClick(event)
@@ -145,6 +167,7 @@ function UiButton(props: TUiButtonProps) {
             )
         }
     }
+    // #endregion
 }
 
 export { UiButton }

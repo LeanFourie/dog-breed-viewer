@@ -9,6 +9,7 @@ import type {
     TUiVariant,
     TUiShape,
     TValueOf,
+    TSystemColor,
 } from '../../../utils/definitions/types'
 import { ROUTES } from '../../../utils/routes/routes'
 import type { TIcon } from '../../base/ui-icon/ui-icon.definitions'
@@ -24,6 +25,7 @@ type TUiButtonColor =
     | Exclude<TThemeColor, 'tertiary'>
     | Extract<TSemanticColor, 'danger'>
     | Exclude<TNeutralColor, 'black'>
+    | TSystemColor
 /**
  * The click event which is emitted when a button is clicked.
  */

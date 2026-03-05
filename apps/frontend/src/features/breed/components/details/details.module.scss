@@ -1,0 +1,34 @@
+@use '../../../../styles/theming/fonts' as font;
+@use '../../../../styles/theming/sizes' as size;
+@use '../../../../styles/utils/mixins' as mixin;
+
+$name: 'PageBreedDetails';
+
+.#{ $name } {
+    @include mixin.flex-column(
+        $gap: size.rem(8),
+        $align-items: center,
+        $justify-content: center
+    );
+
+    &__headline {
+        @include mixin.flex($gap: size.rem(28));
+    }
+
+    &__cta {
+        position: relative;
+        z-index: 3;
+    }
+
+    &__title {
+        font-family: font.family(secondary), 'sans-serif';
+    }
+
+    &__details {
+        @include mixin.flex($gap: size.rem(24));
+
+        b {
+            @include mixin.font-weight(600);
+        }
+    }
+}

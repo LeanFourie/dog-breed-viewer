@@ -15,8 +15,14 @@ function UiFormWrapper({
     state = 'neutral',
     style = {},
 }: TUiFormWrapperProps) {
+    // #region - Variables
+    /**
+     * The name of the component used for styling and identification in the DOM inspector.
+     */
     const name = `UiFormWrapper`
+    // #endregion
 
+    // #region - Markup
     return (
         <div
             className={`
@@ -25,8 +31,10 @@ function UiFormWrapper({
             `}
             style={style}
         >
+            {/* Label */}
             {!!label && label !== '' ? (
                 <div className={css[`${name}__label`]}>
+                    {/* Label Value */}
                     <UiText
                         className={css[`${name}__label-element`]}
                         htmlFor={htmlFor}
@@ -45,6 +53,8 @@ function UiFormWrapper({
                             </sup>
                         ) : null}
                     </UiText>
+                    {/* ./Label Value */}
+                    {/* Optional Indicator */}
                     {requirement === 'optional' ? (
                         <UiText
                             className={css[`${name}__label-optional-marker`]}
@@ -56,6 +66,8 @@ function UiFormWrapper({
                             (Optional)
                         </UiText>
                     ) : null}
+                    {/* ./Optional Indicator */}
+                    {/* Count */}
                     {!!count ? (
                         <UiText
                             className={css[`${name}__label-count`]}
@@ -67,11 +79,16 @@ function UiFormWrapper({
                             {count}
                         </UiText>
                     ) : null}
+                    {/* ./Count */}
                 </div>
             ) : null}
+            {/* ./Label */}
 
+            {/* Content */}
             {children}
+            {/* ./Content */}
 
+            {/* Helper Text */}
             {helperText && helperText.length > 0 ? (
                 <div className={css[`${name}__helpers`]}>
                     {helperText.map((helper, index) => (
@@ -84,8 +101,10 @@ function UiFormWrapper({
                     ))}
                 </div>
             ) : null}
+            {/* ./Helper Text */}
         </div>
     )
+    // #endregion
 }
 
 export { UiFormWrapper }

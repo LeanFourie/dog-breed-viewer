@@ -13,9 +13,19 @@ function UiText({
     variant = 'p',
     weight = 'regular',
 }: TUiTextProps) {
+    // #region - Variables
+    /**
+     * The name of the component used for styling and identification in the DOM inspector.
+     */
     const name = `UiText`
+    /**
+     * The HTML tag for the dynamic component to render based on the provided props.
+     * Prefers the `renderAs` prop if set, else uses the `variant` prop.
+     */
     const Component = renderAs ?? variant
+    // #endregion
 
+    // #region - Markup
     return (
         <Component
             className={`
@@ -33,6 +43,7 @@ function UiText({
             {children}
         </Component>
     )
+    // #endregion
 }
 
 export { UiText }

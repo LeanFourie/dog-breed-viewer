@@ -4,9 +4,7 @@ import { type IBreedsContext } from './breeds.definitions'
 import {
     createContext,
     use,
-    useCallback,
     useEffect,
-    useMemo,
     useState,
 } from 'react'
 import { fetchJson } from '../../utils/methods/api'
@@ -14,167 +12,230 @@ import {
     type IDogBreedsApiResponse,
     type TDogBreedsMessage,
     type TDogBreedImageMessage,
-    type TDogBreedImagesMessage,
 } from '../../utils/models/dog-breeds.model'
 import { trimLowercase } from '../../utils/methods/strings'
+import { NotificationContext } from '../notification/notification.provider'
 
 export const BreedsContext = createContext<IBreedsContext | null>(null)
 
-const fetchDogBreedDataPromise = () =>
-    fetchJson<IDogBreedsApiResponse<TDogBreedsMessage>>({
-        url: `${import.meta.env.VITE_API_BASE_URL}/breeds/list/all`,
-    })
-
-const initialDogBreedDataPromise = fetchDogBreedDataPromise()
-
-const fetchDogBreedImage = (breed: string) =>
-    fetchJson<IDogBreedsApiResponse<TDogBreedImageMessage>>({
-        url: `${
-            import.meta.env.VITE_API_BASE_URL
-        }/breed/${breed}/images/random`,
-    })
-
 const BreedsProvider = ({ children }: React.PropsWithChildren) => {
-    // #region - APIs
-    const [dogBreedDataPromise, setDogBreedDataPromise] = useState(
-        initialDogBreedDataPromise
-    )
-    const dogBreedData = use(dogBreedDataPromise)
-    // #endregion
-
-    // #region - Variables
-    const dogBreedList = useMemo(() => {
-        return dogBreedData.ok
-            ? Object.entries(dogBreedData.data.message)
-                  .flatMap(([breed, subBreeds]) =>
-                      subBreeds.length > 0
-                          ? subBreeds.map((sub) => `${sub} ${breed}`)
-                          : [breed]
-                  )
-                  .sort((a, b) => a.localeCompare(b))
-            : ['Error occurred while fetching the data']
-    }, [dogBreedData])
-
-    const dogBreedListError = !dogBreedData.ok ? dogBreedData.error : null
-    // #endregion
-
     // #region - States
-    const [_breedImages, _setBreedImages] = useState<Record<string, string>>({})
-    const [_breedImageArray, _setBreedImageArray] = useState<
-        Record<string, string[]>
-    >({})
-    const [_loadingImages, _setLoadingImages] = useState<Set<string>>(new Set())
-    const [_filteredDogBreedList, _setFilteredDogBreedList] =
-        useState(dogBreedList)
+    /**
+     * The list of all dog breeds fetched from the API.
+     */
+    const [_allBreeds, _setAllBreeds] = useState<IBreedsContext['allBreeds']>(
+        []
+    )
+    /**
+     * The list of dog breeds filtered by the search keyword.
+     */
+    const [_filteredBreeds, _setFilteredBreeds] = useState<
+        IBreedsContext['filteredBreeds']
+    >([])
+    /**
+     * Whether the API is currently loading data.
+     * This use case is simple as we only need to check one API fetch method.
+     */
+    const [_isLoading, _setIsLoading] =
+        useState<IBreedsContext['isLoading']>(false)
+    /**
+     * The error message if the API request failed.
+     * This is not a general requirement, but used to display an error page to the user.
+     */
+    const [_apiError, _setApiError] = useState<IBreedsContext['apiError']>()
+    /**
+     * The search keyword used to filter the dog breeds.
+     * Added as a stateful value so that the keyword persist between page transitions.
+     */
+    const [_searchKeyword, _setSearchKeyword] = useState<string>('')
+    // #endregion
+
+    // #region - Hooks
+    /**
+     * The notification context used to display snackbars to the user.
+     */
+    const notificationContext = use(NotificationContext)
     // #endregion
 
     // #region - Methods
-    const retryDogBreedList = useCallback(() => {
-        setDogBreedDataPromise(fetchDogBreedDataPromise())
-    }, [])
+    /**
+     * Fetches the dog breeds list from the provided API.
+     * @param force - If true, the cached data will be ignored and the new data will be fetched and returned.
+     * @returns - The list of dog breeds from the API alongside an image field to store the breed image.
+     */
+    const fetchBreeds = async ({
+        force,
+    }: {
+        force?: boolean
+    } = {}): Promise<IBreedsContext['allBreeds']> => {
+        // If an API error message is set, clear it
+        if (!!_apiError) _setApiError(undefined)
 
-    const getBreedImage = useCallback(
-        async (breed: string): Promise<string | undefined> => {
-            if (!dogBreedData.ok) return undefined
+        // If not force and breeds are already fetched, return the cached breeds
+        // This is so we don't make unnecessary requests to the API
+        if (!force && Object.keys(_allBreeds).length > 0) {
+            return _allBreeds
+        }
 
-            if (_breedImages[breed]) return _breedImages[breed]
+        // Set the loading state to true
+        _setIsLoading(true)
 
-            if (_loadingImages.has(breed)) return undefined
-
-            _setLoadingImages((prev) => new Set(prev).add(breed))
-
-            try {
-                const formattedBreed = breed.includes(' ')
-                    ? `${breed.split(' ')[1]}/${breed.split(' ')[0]}`
-                    : breed
-
-                const res = await fetchDogBreedImage(formattedBreed)
-
-                if (!res.ok) return undefined
-
-                _setBreedImages((prev) => ({
-                    ...prev,
-                    [breed]: res.data.message,
-                }))
-
-                return res.data.message
-            } catch (error) {
-                console.error('Failed to fetch breed image', error)
-                return undefined
-            } finally {
-                _setLoadingImages((prev) => {
-                    const next = new Set(prev)
-                    next.delete(breed)
-                    return next
-                })
-            }
-        },
-        [_breedImages, _loadingImages]
-    )
-
-    const searchBreedList = (keyword: string) => {
-        _setFilteredDogBreedList(
-            dogBreedList.filter((breed) =>
-                trimLowercase(breed).includes(trimLowercase(keyword))
-            )
-        )
-    }
-
-    const fetchDogBreedImages = async (breed: string) => {
-        if (_breedImageArray[breed]) return _breedImageArray[breed]
+        // NOTE: KEEP THIS COMMENTED OUT.
+        // This is used for testing purposes.
+        // It imported from '../../utils/methods/api'
+        // await apiDelay(1500)
 
         try {
-            const formattedBreed = breed.includes('-')
-                ? `${breed.split('-')[1]}/${breed.split('-')[0]}`
+            // Fetch the dog breeds list from the API
+            const breeds = await fetchJson<
+                IDogBreedsApiResponse<TDogBreedsMessage>
+            >({
+                url: `${import.meta.env.VITE_API_BASE_URL}/breeds/list/all`,
+            })
+
+            // If the API failed, log the error and return an empty object
+            if (!breeds.ok) {
+                console.error('Failed to fetch breeds', breeds.error)
+                notificationContext?.addSnackbar({
+                    message: breeds.error,
+                    state: 'danger',
+                })
+
+                // Remove the loader
+                _setIsLoading(false)
+
+                // Set the API error to render
+                _setApiError(breeds.error)
+
+                // Return an empty list.
+                return []
+            }
+
+            // Flatten the breeds data to include the breed name and sub-breed name
+            const allBreeds = Object.entries(breeds.data.message)
+                .flatMap(([breed, subBreeds]) =>
+                    subBreeds.length > 0
+                        ? subBreeds.map((sub) => `${sub} ${breed}`)
+                        : [breed]
+                )
+                .sort((a, b) => a.localeCompare(b))
+
+            // Format the breeds data to include the breed name and image field
+            const formattedBreeds = allBreeds.map((breed) => ({
+                name: breed,
+                image: '',
+            }))
+
+            // Store the associated states
+            _setAllBreeds(formattedBreeds)
+
+            // Remove the loader
+            _setIsLoading(false)
+
+            // Return the final list of breeds
+            return formattedBreeds
+        } catch (error) {
+            console.error('Failed to fetch breeds', error)
+            notificationContext?.addSnackbar({
+                message: `${ error }`,
+                state: 'danger',
+            })
+
+            // Remove the loader
+            _setIsLoading(false)
+
+            // Set the API error to render
+            _setApiError(`${error}`)
+
+            // Return an empty list
+            return []
+        }
+    }
+
+    const fetchBreedDisplayImage = async ({
+        breed,
+        force,
+    }: {
+        breed: string
+        force?: boolean
+    }): Promise<IBreedsContext['allBreeds'][number]['image']> => {
+        const matchingBreed = _allBreeds.find(
+            (foundBreed) => foundBreed.name === breed
+        )
+        if (matchingBreed?.image && !force) return matchingBreed.image
+
+        try {
+            const formattedBreed = breed.includes(' ')
+                ? `${breed.split(' ')[1]}/${breed.split(' ')[0]}`
                 : breed
 
-            const res = await fetchJson<
-                IDogBreedsApiResponse<TDogBreedImagesMessage>
+            const image = await fetchJson<
+                IDogBreedsApiResponse<TDogBreedImageMessage>
             >({
                 url: `${
                     import.meta.env.VITE_API_BASE_URL
-                }/breed/${formattedBreed}/images/random/3`,
+                }/breed/${formattedBreed}/images/random`,
             })
 
-            if (!res.ok) return undefined
+            if (!image.ok) {
+                console.error('Failed to fetch breed image', image.error)
+                notificationContext?.addSnackbar({
+                    message: image.error,
+                    state: 'danger',
+                })
 
-            _setBreedImageArray((prev) => ({
-                ...prev,
-                [breed]: res.data.message,
-            }))
+                return ''
+            }
 
-            return res.data.message
+            _setAllBreeds((prev) =>
+                prev.map((foundBreed) =>
+                    foundBreed.name === breed
+                        ? { ...foundBreed, image: image.data.message }
+                        : foundBreed
+                )
+            )
+
+            return image.data.message
         } catch (error) {
-            console.error('Failed to fetch breed images', error)
+            console.error('Failed to fetch breed image', error)
+            notificationContext?.addSnackbar({
+                message: `${ error }`,
+                state: 'danger',
+            })
 
-            return undefined
+            return ''
         }
+    }
+
+    const handleBreedSearch = (keyword: string): void => {
+        _setSearchKeyword(keyword)
     }
     // #endregion
 
     // #region - Effects
     useEffect(() => {
-        _setFilteredDogBreedList(dogBreedList)
-    }, [dogBreedList])
-
-    useEffect(() => {
-        if (dogBreedList.length === 0) return
-
-        getBreedImage(dogBreedList[0])
-    }, [dogBreedList])
-    // #endregion
+        _setFilteredBreeds(
+            _allBreeds.filter((breed) =>
+                trimLowercase(breed.name).includes(
+                    trimLowercase(_searchKeyword)
+                )
+            )
+        )
+    }, [_allBreeds, _searchKeyword])
 
     // #region - Value
     const value: IBreedsContext = {
-        dogBreedList,
-        dogBreedListError,
-        filteredDogBreedList: _filteredDogBreedList,
-        breedImages: _breedImages,
-        breedImageArray: _breedImageArray,
-        getBreedImage,
-        searchBreedList,
-        retryDogBreedList,
-        fetchDogBreedImages,
+        // Data
+        allBreeds: _allBreeds,
+        apiError: _apiError,
+        filteredBreeds: _filteredBreeds,
+        isLoading: _isLoading,
+        searchKeyword: _searchKeyword,
+
+        // Methods
+        fetchBreeds,
+        fetchBreedDisplayImage,
+        handleBreedSearch
     }
     // #endregion
 

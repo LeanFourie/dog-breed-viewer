@@ -1,15 +1,40 @@
+// #region - Types
+/**
+ * The response message for the breeds listing API endpoint.
+ */
+type TDogBreedsMessage = Record<string, string[]>
+/**
+ * The response message for the breed single image API endpoint.
+ */
+type TDogBreedImageMessage = string
+/**
+ * The response message for the breed image list API endpoint.
+ */
+type TDogBreedImagesMessage = string[]
+// #endregion
+
+// #region - Interfaces
+/**
+ * A generic interface the represents the response for API calls made for the dog breed data.
+ */
 interface IDogBreedsApiResponse<T> {
+    /**
+     * The response message returned.
+     * This is generic because the response message differs for different endpoints.
+     */
     message: T
+    /**
+     * The API response status.
+     */
     status: string
 }
+// #endregion
 
-type TDogBreedsMessage = Record<string, string[]>
-type TDogBreedImageMessage = string
-type TDogBreedImagesMessage = string[]
-
+// #region - Exports
 export type {
     IDogBreedsApiResponse,
     TDogBreedsMessage,
     TDogBreedImageMessage,
     TDogBreedImagesMessage,
 }
+// #endregion

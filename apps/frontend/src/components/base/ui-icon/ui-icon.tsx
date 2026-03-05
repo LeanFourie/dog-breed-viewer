@@ -9,9 +9,24 @@ function UiIcon({
     type = 'text',
     value,
 }: TUiIconProps) {
+    // #region - Variables
+    /**
+     * The name of the component used for styling and identification in the DOM inspector.
+     */
     const name = `UiIcon`
-    const [_svgContent, _setSvgContent] = useState<SVGSVGElement | null>(null)
+    // #endregion
 
+    // #region - States
+    /**
+     * Stores the HTML content of the loaded SVG element.
+     */
+    const [_svgContent, _setSvgContent] = useState<SVGSVGElement | null>(null)
+    // #endregion
+
+    // #region - Methods
+    /**
+     * Loads an image and transforms it into an inline SVG.
+     */
     const loadSVG = async () => {
         if (!value || typeof value !== 'string') return
 
@@ -29,11 +44,18 @@ function UiIcon({
             console.error('Failed to load SVG:', err)
         }
     }
+    // #endregion
 
+    // #region - Effects
+    /**
+     * Load the image as an SVG if the component type is set to `svg`.
+     */
     useEffect(() => {
         if (type === 'svg') loadSVG()
     }, [type, value])
+    // #endregion
 
+    // #region - Markup
     return (
         <span
             className={`
@@ -55,6 +77,7 @@ function UiIcon({
             )}
         </span>
     )
+    // #endregion
 }
 
 export { UiIcon }

@@ -1,7 +1,7 @@
 import { forwardRef } from 'react'
 import { UiIcon } from '../../base/ui-icon/ui-icon'
-import { UiLoader } from '../../base/ui-loader/ui-loader'
 import { UiText } from '../../base/ui-text/ui-text'
+import { UiLoader } from '../../feedback/ui-loader/ui-loader'
 import { UiFormWrapper } from '../ui-form-wrapper/ui-form-wrapper'
 import {
     type TUiInputKeyDownEvent,
@@ -48,24 +48,75 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
     },
     ref
 ) {
+    // #region - Variables
+    /**
+     * The name of the component used for styling and identification in the DOM inspector.
+     */
     const name = `UiInput`
+    /**
+     * The HTML tag to render for the leading icon.
+     * If it is clickable, render it as a button, else render it as a div.
+     * This ensures more accurate semantic code.
+     */
+    const LeadingIcon = leadingIcon?.onClick ? 'button' : 'div'
+    /**
+     * The HTML tag to render for the trailing icon.
+     * If it is clickable, render it as a button, else render it as a div.
+     * This ensures more accurate semantic code.
+     */
+    const TrailingIcon = trailingIcon?.onClick ? 'button' : 'div'
+    /**
+     * The HTML tag to render for the prefix.
+     * If it is clickable, render it as a button, else render it as a div.
+     * This ensures more accurate semantic code.
+     */
+    const Prefix = prefix?.onClick ? 'button' : 'div'
+    /**
+     * The HTML tag to render for the suffix.
+     * If it is clickable, render it as a button, else render it as a div.
+     * This ensures more accurate semantic code.
+     */
+    const Suffix = suffix?.onClick ? 'button' : 'div'
+    // #endregion
 
+    // #region - Methods
+    /**
+     * Handles value change events on the input.
+     * @param event - The event emitted when the input value changes.
+     */
     const handleChange = (event: TUiInputChangeEvent): void => {
+        // Do not trigger the event when it should be disabled.
         if (isDisabled || isLoading || isSkeleton) return
+
         onChange(event)
     }
-
+    /**
+     * Handles focus in events on the input.
+     * @param event - The event emitted when the input is in focus.
+     */
     const handleFocus = (event: TUiInputFocusEvent): void => {
+        // Do not trigger the event when it should be disabled.
         if (isDisabled || isLoading || isSkeleton || !onFocus) return
+
         onFocus(event)
     }
-
+    /**
+     * Handles focus out events on the input.
+     * @param event - The event emitted when the input loses focus.
+     */
     const handleBlur = (event: TUiInputFocusEvent): void => {
+        // Do not trigger the event when it should be disabled.
         if (isDisabled || isLoading || isSkeleton || !onBlur) return
+
         onBlur(event)
     }
-
+    /**
+     * Handles enter key press events on the input.
+     * @param event - The event emitted when the any key is pressed while the input is in focus.
+     */
     const handleEnterPress = (event: TUiInputKeyDownEvent): void => {
+        // Do not trigger the event when it should be disabled.
+        // Also, only allow press events on the enter key to pass.
         if (
             isDisabled ||
             isLoading ||
@@ -77,23 +128,27 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
 
         onEnterPress(event)
     }
-
+    /**
+     * Handles value increment / decrement for number based inputs.
+     * @param event - The direction the value should move to. -1 for for decrement and 1 for increment.
+     */
     const handleValueIncrement = (direction: -1 | 1): void => {
+        // Do not trigger the event when it should be disabled.
         if (!onValueIncrement) return
 
+        // Calculate the new value
         const newValue = Number(value) + direction * (step ?? 1)
 
+        // Ensure the new value stays within the min and max range
         if (!!min && newValue < min) return
         if (!!max && newValue > max) return
 
+        // Emit the event with the new value
         onValueIncrement(`${newValue}`)
     }
+    // #endregion
 
-    const LeadingIcon = leadingIcon?.onClick ? 'button' : 'div'
-    const TrailingIcon = trailingIcon?.onClick ? 'button' : 'div'
-    const Prefix = prefix?.onClick ? 'button' : 'div'
-    const Suffix = suffix?.onClick ? 'button' : 'div'
-
+    // #region - Markup
     return (
         <UiFormWrapper
             className={`
@@ -113,6 +168,7 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
             style={style}
         >
             <div className={css[`${name}__inner`]}>
+                {/* Leading Icon */}
                 {!!leadingIcon && (
                     <LeadingIcon
                         onClick={leadingIcon.onClick}
@@ -127,7 +183,9 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
                         />
                     </LeadingIcon>
                 )}
+                {/* ./Leading Icon */}
 
+                {/* Decrement Button */}
                 {type === 'number' && (
                     <LeadingIcon
                         onClick={() => handleValueIncrement(-1)}
@@ -144,7 +202,9 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
                         />
                     </LeadingIcon>
                 )}
+                {/* ./Decrement Button */}
 
+                {/* Prefix */}
                 {!!prefix && (
                     <Prefix
                         onClick={prefix.onClick}
@@ -153,12 +213,14 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
                             ${css[`${name}__text--prefix`]}
                         `}
                     >
-                        <UiText renderAs="span" variant="label">
+                        <UiText renderAs={'span'} variant={'label'}>
                             {prefix.value}
                         </UiText>
                     </Prefix>
                 )}
+                {/* ./Prefix */}
 
+                {/* Input */}
                 <input
                     autoComplete={autoComplete}
                     ref={ref}
@@ -182,7 +244,9 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
                     type={type}
                     value={value}
                 />
+                {/* ./Input */}
 
+                {/* Suffix */}
                 {!!suffix && (
                     <Suffix
                         onClick={suffix.onClick}
@@ -191,12 +255,14 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
                             ${css[`${name}__text--suffix`]}
                         `}
                     >
-                        <UiText renderAs="span" variant="label">
+                        <UiText renderAs={'span'} variant={'label'}>
                             {suffix.value}
                         </UiText>
                     </Suffix>
                 )}
+                {/* ./Suffix */}
 
+                {/* Increment Button */}
                 {type === 'number' && (
                     <LeadingIcon
                         onClick={() => handleValueIncrement(1)}
@@ -213,7 +279,9 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
                         />
                     </LeadingIcon>
                 )}
+                {/* ./Increment Button */}
 
+                {/* Trailing Icon */}
                 {!!trailingIcon && (
                     <TrailingIcon
                         onClick={trailingIcon.onClick}
@@ -228,7 +296,9 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
                         />
                     </TrailingIcon>
                 )}
+                {/* ./Trailing Icon */}
 
+                {/* Loader */}
                 {isLoading && (
                     <UiLoader
                         className={css[`${name}__loader`]}
@@ -236,9 +306,11 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
                         type="circular"
                     />
                 )}
+                {/* ./Loader */}
             </div>
         </UiFormWrapper>
     )
+    // #endregion
 })
 
 export { UiInput }

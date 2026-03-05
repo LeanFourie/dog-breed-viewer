@@ -1,0 +1,11 @@
+$name: 'PageBreed';
+
+.#{ $name } {
+    width: 100svw;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    padding-block: 7.5svh;
+}

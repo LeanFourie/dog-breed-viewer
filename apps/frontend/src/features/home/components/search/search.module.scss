@@ -1,0 +1,64 @@
+@use '../../../../styles/theming/colors' as color;
+@use '../../../../styles/theming/sizes' as size;
+@use '../../../../styles/utils/mixins' as mixin;
+
+$name: 'PageHomeSearch';
+
+.#{ $name } {
+    width: 100svw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: size.rem(32) size.rem(20);
+    background: linear-gradient(
+        to bottom,
+        color.get(system-base),
+        color.alpha(system-base, 0)
+    );
+    z-index: 10;
+
+    &__inner {
+        @include mixin.flex($justify-content: flex-start);
+
+        width: 25svw;
+        position: relative;
+    }
+
+    &__input {
+        width: 100%;
+        appearance: none;
+        -webkit-appearance: none;
+        padding: size.rem(16) size.rem(56) size.rem(16) size.rem(20);
+        background-color: color.alpha(system-invert, 0.1);
+        border: solid size.rem(1) color.get(system-invert);
+        border-radius: size.rem(8);
+        outline: none;
+        backdrop-filter: blur(size.rem(6));
+        color: color.get(system-invert);
+        font-size: size.rem(16);
+
+        @include mixin.placeholder-style {
+            @include mixin.transition-style(extra-fast);
+
+            color: color.get(system-invert);
+            opacity: 0.6;
+            transform-origin: center left;
+        }
+
+        @include mixin.focus {
+            @include mixin.placeholder-style {
+                @include mixin.transform(scale(0.9));
+
+                opacity: 0.4;
+            }
+        }
+    }
+
+    &__cta {
+        @include mixin.transform(translateY(-50%));
+
+        position: absolute;
+        top: 50%;
+        right: size.rem(6);
+    }
+}

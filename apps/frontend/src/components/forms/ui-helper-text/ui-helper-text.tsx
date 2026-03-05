@@ -11,8 +11,14 @@ function UiHelperText({
     style = {},
     value,
 }: TUiHelperTextProps) {
+    // #region - Variables
+    /**
+     * The name of the component used for styling and identification in the DOM inspector.
+     */
     const name = `UiHelperText`
+    // #endregion
 
+    // #region - Markup
     return (
         <span
             className={`
@@ -23,6 +29,7 @@ function UiHelperText({
             `}
             style={style}
         >
+            {/* Icon */}
             {!!icon ? (
                 <span className={css[`${name}__icon`]}>
                     <UiIcon
@@ -31,7 +38,9 @@ function UiHelperText({
                     />
                 </span>
             ) : null}
+            {/* ./Icon */}
 
+            {/* Text */}
             <UiText
                 isSkeleton={isSkeleton}
                 renderAs={'span'}
@@ -40,8 +49,10 @@ function UiHelperText({
             >
                 {value}
             </UiText>
+            {/* ./Text */}
         </span>
     )
+    // #endregion
 }
 
 export { UiHelperText }

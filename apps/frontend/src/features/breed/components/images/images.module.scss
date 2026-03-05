@@ -1,0 +1,36 @@
+@use '../../../../styles/utils/mixins' as mixin;
+
+$name: 'PageBreedImages';
+
+.#{ $name } {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    inset: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    z-index: 2;
+
+    &__loader {
+        @include mixin.flex;
+
+        width: 100%;
+    }
+
+    &__list {
+        width: min-content;
+        display: grid;
+        grid-auto-columns: 16.65svw;
+        grid-auto-flow: column;
+        align-items: center;
+
+        &-item {
+            &:nth-child(3n) {
+                @include mixin.transform(scale(0.6));
+            }
+            &:nth-child(3n - 1) {
+                @include mixin.transform(translateX(10%) scale(0.8));
+            }
+        }
+    }
+}
