@@ -44,6 +44,7 @@ $button-colors: map.merge($button-colors, $additional-button-colors);
     border-color: var(--button-border-color);
     font: inherit;
     cursor: pointer;
+    text-decoration: none;
 
     &__host {
         @include mixin.inline-flex();

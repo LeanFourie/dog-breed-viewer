@@ -3,20 +3,15 @@ import { ROUTES } from '../utils/routes/routes'
 import { PageHome, PageBreed, UiFallbackLoader } from '../components'
 import { BreedsProvider } from '../providers'
 import css from './app.module.scss'
-import { Suspense, useEffect, useRef } from 'react'
+import { Suspense, useEffect } from 'react'
 import Lenis from 'lenis'
 
 export function App() {
     const name = `App`
 
-    const appRef = useRef<HTMLDivElement>(null)
-
     useEffect(() => {
-        if (!appRef.current) return
-
         const lenis = new Lenis({
             infinite: true,
-            // wrapper: appRef.current
         })
 
         function raf(time: number) {
@@ -29,16 +24,16 @@ export function App() {
         return () => {
             lenis.destroy()
         }
-    }, [appRef])
+    }, [])
 
     return (
-        <div className={css[name]} data-theme="dark" ref={appRef}>
+        <div className={css[name]} data-theme="dark">
             <Suspense fallback={<UiFallbackLoader />}>
                 <BreedsProvider>
                     <Routes>
                         <Route path={ROUTES.Home} element={<PageHome />} />
                         <Route
-                            path={ROUTES.BreedDetail}
+                            path={ROUTES.Breed}
                             element={<PageBreed />}
                         />
                     </Routes>

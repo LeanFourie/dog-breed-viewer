@@ -44,6 +44,7 @@ type TUiShape = 'square' | 'circle' | 'squircle'
  * The available semantic states.
  */
 type TSemanticState = 'neutral' | TSemanticColor
+type TValueOf<T> = T[keyof T]
 // #endregion
 
 // #region - Exports
@@ -58,6 +59,7 @@ export type {
     TThemeColor,
     TUiShape,
     TUiVariant,
-    TSemanticState
+    TSemanticState,
+    TValueOf
 }
 // #endregion

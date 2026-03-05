@@ -6,19 +6,77 @@
 $name: 'PageBreed';
 
 .#{ $name } {
+    width: 100svw;
     min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    padding-block: 7.5svh;
+
+    &__text {
+        @include mixin.flex-column(
+            $gap: size.rem(8),
+            $align-items: center,
+            $justify-content: center
+        );
+
+        &-headline {
+            @include mixin.flex($gap: size.rem(28));
+        }
+
+        &-cta {
+            position: relative;
+            z-index: 3;
+        }
+
+        &-title {
+            font-family: font.family(secondary), 'sans-serif';
+        }
+
+        &-details {
+            @include mixin.flex($gap: size.rem(24));
+
+            b {
+                @include mixin.font-weight(600);
+            }
+        }
+    }
 
     &__images {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        display: flex;
+        align-items: center;
+        position: absolute;
+        inset: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        z-index: 2;
+
+        &-inner {
+            width: min-content;
+            display: grid;
+            grid-auto-columns: 16.65svw;
+            grid-auto-flow: column;
+            align-items: center;
+        }
+
+        &-loader {
+            @include mixin.flex;
+
+            width: 100%;
+        }
     }
 
     &__image {
-        width: 100%;
-        max-width: 600px;
-        aspect-ratio: 1;
-        border-radius: 1rem;
-        overflow: hidden;
-        background-color: var(--color-surface-2);
+        &:nth-child(3n) {
+            @include mixin.transform(scale(0.6));
+        }
+        &:nth-child(3n - 1) {
+            @include mixin.transform(translateX(10%) scale(0.8));
+        }
+    }
+
+    &__navigation {
+            @include mixin.flex($gap: size.rem(28));
     }
 }

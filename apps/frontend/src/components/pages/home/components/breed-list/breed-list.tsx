@@ -6,7 +6,7 @@ import {
 import { UiImage } from '../../../../base/ui-image/ui-image'
 import { UiText } from '../../../../base/ui-text/ui-text'
 import css from './breed-list.module.scss'
-import { use, useEffect, useRef, useState, startTransition } from 'react'
+import { use, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../../../../../utils/routes/routes'
 
@@ -120,10 +120,8 @@ function PageHomeBreedList() {
                                     String(window.scrollY)
                                 )
                             }
-                            startTransition(() => {
-                                navigate(ROUTES.Breed(stringToKey(item)), {
-                                    preventScrollReset: true,
-                                })
+                            navigate(ROUTES.Breed.replace(':id', stringToKey(item)), {
+                                preventScrollReset: true,
                             })
                         }}
                     >

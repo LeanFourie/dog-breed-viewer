@@ -6,7 +6,7 @@ function UiFallbackLoader() {
 
     return (
         <div className={css[name]}>
-            <UiLoader size={'lg'} type={'circular'} />
+            <UiLoader size={'lg'} type={'shape'} />
         </div>
     )
 }

@@ -8,6 +8,7 @@ import type {
     TThemeColor,
     TUiVariant,
     TUiShape,
+    TValueOf,
 } from '../../../utils/definitions/types'
 import { ROUTES } from '../../../utils/routes/routes'
 import type { TIcon } from '../../base/ui-icon/ui-icon.definitions'
@@ -184,7 +185,7 @@ interface IUiLinkButtonProps {
     /**
      * Sets the href attribute for the router link element.
      */
-    to: keyof typeof ROUTES
+    to: Extract<TValueOf<typeof ROUTES>, string> | string
 }
 // #endregion
 
