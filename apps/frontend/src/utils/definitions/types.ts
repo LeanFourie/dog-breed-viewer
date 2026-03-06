@@ -20,7 +20,8 @@ type TThemeColor = 'primary' | 'secondary' | 'tertiary'
 /**
  * The sematic state color variants available in the system.
  */
-type TSemanticColor = 'info' | 'success' | 'warning' | 'danger'/**
+type TSemanticColor = 'info' | 'success' | 'warning' | 'danger'
+/**
  * The system color variants available in the system.
  */
 type TSystemColor = 'base' | 'invert'

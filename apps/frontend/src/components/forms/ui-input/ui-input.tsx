@@ -243,6 +243,7 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
                     step={step}
                     type={type}
                     value={value}
+                    aria-invalid={state === 'danger'}
                 />
                 {/* ./Input */}
 

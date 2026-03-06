@@ -27,6 +27,7 @@ function UiFormWrapper({
         <div
             className={`
                 ${css[name]}
+    ${css[`${name}--state-${state}`]}
                 ${className}
             `}
             style={style}

@@ -161,6 +161,7 @@ function UiButton(props: TUiButtonProps) {
                     disabled={isDisabled || isLoading || isSkeleton}
                     className={classes}
                     style={style}
+                    aria-label={props.label}
                 >
                     {content}
                 </button>

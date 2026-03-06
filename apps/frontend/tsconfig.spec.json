@@ -14,6 +14,7 @@
     "jsx": "react-jsx",
     "module": "esnext",
     "moduleResolution": "bundler",
+    "lib": ["dom", "es2022"]
   },
   "include": [
     "vite.config.ts",
