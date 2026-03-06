@@ -49,3 +49,10 @@ vitest.config.*.timestamp*
 storybook-static
 
 .env
+.claude
+.codex
+.cursor
+.gemini
+.github
+.opencode
+.vscode
