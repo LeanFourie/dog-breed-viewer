@@ -18,3 +18,9 @@ export * from './forms/ui-input/ui-input'
 // Pages
 export * from './pages/empty-page/empty-page'
 export * from './pages/error-page/error-page-error'
+
+// Patterns
+export * from './patterns/brand/brand'
+export * from './patterns/protected-route/protected-route'
+export * from './patterns/protected-route/protected-route'
+export * from './patterns/user-dropdown/user-dropdown'

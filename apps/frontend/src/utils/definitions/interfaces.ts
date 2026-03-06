@@ -25,8 +25,14 @@ interface IComponentChildProps {
      */
     name: string
 }
+interface IFetchJsonAuthOptions extends RequestInit {
+    /**
+     * The authentication token to be included in the request headers.
+     */
+    authToken?: string
+}
 // #endregion
 
 // #region - Exports
-export type { IComponentAttributes, IComponentChildProps }
+export type { IComponentAttributes, IComponentChildProps, IFetchJsonAuthOptions }
 // #endregion

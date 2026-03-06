@@ -17,11 +17,19 @@ $name: 'PageHomeSearch';
     );
     z-index: 10;
 
+    @include mixin.max-width(md) {
+        padding: size.rem(80) size.rem(20) size.rem(40);
+    }
+
     &__inner {
         @include mixin.flex($justify-content: flex-start);
 
         width: 25svw;
         position: relative;
+
+        @include mixin.max-width(md) {
+            width: 100%;
+        }
     }
 
     &__input {

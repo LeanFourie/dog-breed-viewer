@@ -1,5 +1,7 @@
-import { PageHome, PageBreed } from '../features'
+import { ProtectedRoute, UiEmptyPage } from '../components'
+import { PageBreed, PageHome, PageLogin } from '../features'
 import {
+    AuthProvider,
     BreedProvider,
     BreedsProvider,
     NotificationProvider,
@@ -39,25 +41,55 @@ export function App() {
             lenis.destroy()
         }
     }, [])
+    useEffect(() => {
+  fetch('/api')
+    .then(res => res.json())
+}, [])
     // #endregion
 
     // #region - Markup
     return (
         <div className={css[name]} data-theme="dark">
             <NotificationProvider>
-                <BreedsProvider>
+                <AuthProvider>
                     <Routes>
-                        <Route path={ROUTES.Home} element={<PageHome />} />
+                        {/* PROTECTED ROUTES */}
+                        {/* Home */}
+                        <Route
+                            path={ROUTES.Home}
+                            element={
+                                <BreedsProvider>
+                                    <ProtectedRoute>
+                                        <PageHome />
+                                    </ProtectedRoute>
+                                </BreedsProvider>
+                            }
+                        />
+                        {/* ./Home */}
+                        {/* Breed */}
                         <Route
                             path={ROUTES.Breed}
                             element={
-                                <BreedProvider>
-                                    <PageBreed />
-                                </BreedProvider>
+                                <BreedsProvider>
+                                    <ProtectedRoute>
+                                        <BreedProvider>
+                                            <PageBreed />
+                                        </BreedProvider>
+                                    </ProtectedRoute>
+                                </BreedsProvider>
                             }
                         />
+                        {/* ./Breed */}
+
+                        {/* PUBLIC ROUTES */}
+                        {/* Login */}
+                        <Route path={ROUTES.Login} element={<PageLogin />} />
+                        {/* ./Login */}
+                        {/* Not Found */}
+                        <Route path="*" element={<UiEmptyPage />} />
+                        {/* ./Not Found */}
                     </Routes>
-                </BreedsProvider>
+                </AuthProvider>
             </NotificationProvider>
         </div>
     )

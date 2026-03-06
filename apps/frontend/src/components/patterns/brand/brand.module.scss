@@ -1,0 +1,12 @@
+@use '../../../styles/theming/colors' as color;
+@use '../../../styles/theming/sizes' as size;
+@use '../../../styles/utils/mixins' as mixin;
+
+$name: 'UiBrand';
+
+.#{$name} {
+    position: fixed;
+    bottom: size.rem(40);
+    right: size.rem(40);
+    z-index: 100;
+}

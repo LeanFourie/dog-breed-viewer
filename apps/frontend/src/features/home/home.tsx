@@ -1,6 +1,6 @@
 'use client'
 
-import { UiErrorPage, UiLoader } from '../../components'
+import { UiBrand, UiErrorPage, UiLoader } from '../../components'
 import { BreedsContext } from '../../providers'
 import {
     PageHomeBreedList,
@@ -97,6 +97,7 @@ function PageHome() {
                                 fetchBreedDisplayImage={breedsContext.fetchBreedDisplayImage}
                                 filteredBreeds={breedsContext.filteredBreeds}
                             />
+                            <UiBrand />
                         </>
                     ) : null}
                 </>

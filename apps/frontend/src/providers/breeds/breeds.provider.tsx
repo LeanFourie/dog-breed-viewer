@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { fetchJson } from '../../utils/methods/api'
 import {
-    type IDogBreedsApiResponse,
+    type IDogBreedsModel,
     type TDogBreedsMessage,
     type TDogBreedImageMessage,
 } from '../../utils/models/dog-breeds.model'
@@ -88,7 +88,7 @@ const BreedsProvider = ({ children }: React.PropsWithChildren) => {
         try {
             // Fetch the dog breeds list from the API
             const breeds = await fetchJson<
-                IDogBreedsApiResponse<TDogBreedsMessage>
+                IDogBreedsModel<TDogBreedsMessage>
             >({
                 url: `${import.meta.env.VITE_API_BASE_URL}/breeds/list/all`,
             })
@@ -151,7 +151,12 @@ const BreedsProvider = ({ children }: React.PropsWithChildren) => {
             return []
         }
     }
-
+    /**
+     * Fetches the display image for the provided dog breed.
+     * @param breed - The name of the dog breed to fetch the image for.
+     * @param force - If true, the cached image will be ignored and the new image will be fetched and returned.
+     * @returns 
+     */
     const fetchBreedDisplayImage = async ({
         breed,
         force,
@@ -159,34 +164,49 @@ const BreedsProvider = ({ children }: React.PropsWithChildren) => {
         breed: string
         force?: boolean
     }): Promise<IBreedsContext['allBreeds'][number]['image']> => {
+        // Find the breed in the list of breeds
+        // This is to use an existing image if it exists
         const matchingBreed = _allBreeds.find(
             (foundBreed) => foundBreed.name === breed
         )
+
+        // If we have an existing image and not forcing a refresh, return the existing image
+        // This is to prevent unnecessary requests to the API
         if (matchingBreed?.image && !force) return matchingBreed.image
 
         try {
+            // Format the breed name to match the API format
+            // e.g. "Labrador Retriever" -> "labrador/retriever"
             const formattedBreed = breed.includes(' ')
                 ? `${breed.split(' ')[1]}/${breed.split(' ')[0]}`
                 : breed
 
+            // Load the breed image from the API
             const image = await fetchJson<
-                IDogBreedsApiResponse<TDogBreedImageMessage>
+                IDogBreedsModel<TDogBreedImageMessage>
             >({
                 url: `${
                     import.meta.env.VITE_API_BASE_URL
                 }/breed/${formattedBreed}/images/random`,
             })
 
+            // If the API failed, log the error and return an empty string
+            // This is to prevent the app from crashing
             if (!image.ok) {
+                // Log for debugging
                 console.error('Failed to fetch breed image', image.error)
+
+                // Notification to inform the user
                 notificationContext?.addSnackbar({
                     message: image.error,
                     state: 'danger',
                 })
 
+                // Empty string to prevent the app from crashing
                 return ''
             }
 
+            // Store the image in the list of breeds
             _setAllBreeds((prev) =>
                 prev.map((foundBreed) =>
                     foundBreed.name === breed
@@ -195,24 +215,35 @@ const BreedsProvider = ({ children }: React.PropsWithChildren) => {
                 )
             )
 
+            // Return the image
             return image.data.message
         } catch (error) {
+            // Log for debugging
             console.error('Failed to fetch breed image', error)
+
+            // Notification to inform the user
             notificationContext?.addSnackbar({
                 message: `${ error }`,
                 state: 'danger',
             })
 
+            // Empty string to prevent the app from crashing
             return ''
         }
     }
-
+    /**
+     * Stores the search keyword in order to filter the list of visible dog breeds.
+     * @param keyword - The keyword used to filter the dog breeds.
+     */
     const handleBreedSearch = (keyword: string): void => {
         _setSearchKeyword(keyword)
     }
     // #endregion
 
     // #region - Effects
+    /**
+     * Filters the list of dog breeds when the search keyword changes.
+     */
     useEffect(() => {
         _setFilteredBreeds(
             _allBreeds.filter((breed) =>
@@ -239,7 +270,7 @@ const BreedsProvider = ({ children }: React.PropsWithChildren) => {
     }
     // #endregion
 
-    // Markup
+    // #region - Markup
     return (
         <BreedsContext.Provider value={value}>
             {children}

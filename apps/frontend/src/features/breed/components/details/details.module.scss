@@ -13,6 +13,12 @@ $name: 'PageBreedDetails';
 
     &__headline {
         @include mixin.flex($gap: size.rem(28));
+
+        @include mixin.max-width(md) {
+            flex-direction: column;
+            gap: size.rem(20);
+            padding-inline: 10svw;
+        }
     }
 
     &__cta {
@@ -22,10 +28,21 @@ $name: 'PageBreedDetails';
 
     &__title {
         font-family: font.family(secondary), 'sans-serif';
+        text-align: center;
+
+        @include mixin.max-width(md) {
+            font-size: 7svw;
+        }
     }
 
     &__details {
         @include mixin.flex($gap: size.rem(24));
+
+        @include mixin.max-width(md) {
+            flex-direction: column;
+            gap: size.rem(4);
+            margin-top: size.rem(20)
+        }
 
         b {
             @include mixin.font-weight(600);

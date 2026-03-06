@@ -1,0 +1,247 @@
+@use 'sass:map';
+@use '../../../styles/theming/colors' as color;
+@use '../../../styles/theming/sizes' as size;
+@use '../../../styles/utils/animations' as animate;
+@use '../../../styles/utils/mixins' as mixin;
+
+$name: 'UiAvatar';
+
+$avatar-sizes: (
+    'xs': size.rem(24),
+    'sm': size.rem(28),
+    'md': size.rem(32),
+    'lg': size.rem(36),
+    'xl': size.rem(40),
+);
+
+$avatar-colors: (
+    'primary': (
+        'light': (
+            'foreground': color.get(primary-700),
+            'background': color.get(primary-100),
+            'stroke': color.get(primary-300),
+        ),
+        'dark': (
+            'foreground': color.get(system-base),
+            'background': color.get(primary-500),
+            'stroke': color.get(primary-300),
+        ),
+    ),
+    'secondary': (
+        'light': (
+            'foreground': color.get(secondary-800),
+            'background': color.get(secondary-100),
+            'stroke': color.get(secondary-600),
+        ),
+        'dark': (
+            'foreground': color.get(base-black),
+            'background': color.get(secondary-500),
+            'stroke': color.get(secondary-600),
+        ),
+    ),
+    'tertiary': (
+        'light': (
+            'foreground': color.get(tertiary-800),
+            'background': color.get(tertiary-50),
+            'stroke': color.get(tertiary-300),
+        ),
+        'dark': (
+            'foreground': color.get(system-base),
+            'background': color.get(tertiary-500),
+            'stroke': color.get(tertiary-300),
+        ),
+    ),
+    'info': (
+        'light': (
+            'foreground': color.get(info-700),
+            'background': color.get(info-100),
+            'stroke': color.get(info-300),
+        ),
+        'dark': (
+            'foreground': color.get(system-base),
+            'background': color.get(info-500),
+            'stroke': color.get(info-300),
+        ),
+    ),
+    'success': (
+        'light': (
+            'foreground': color.get(success-700),
+            'background': color.get(success-100),
+            'stroke': color.get(success-600),
+        ),
+        'dark': (
+            'foreground': color.get(system-base),
+            'background': color.get(primary-500),
+            'stroke': color.get(success-600),
+        ),
+    ),
+    'warning': (
+        'light': (
+            'foreground': color.get(warning-700),
+            'background': color.get(warning-100),
+            'stroke': color.get(warning-300),
+        ),
+        'dark': (
+            'foreground': color.get(system-base),
+            'background': color.get(warning-500),
+            'stroke': color.get(warning-300),
+        ),
+    ),
+    'danger': (
+        'light': (
+            'foreground': color.get(danger-700),
+            'background': color.get(danger-100),
+            'stroke': color.get(danger-300),
+        ),
+        'dark': (
+            'foreground': color.get(system-base),
+            'background': color.get(danger-500),
+            'stroke': color.get(danger-300),
+        ),
+    ),
+    'grey': (
+        'light': (
+            'foreground': color.get(grey-700),
+            'background': color.get(grey-100),
+            'stroke': color.get(grey-300),
+        ),
+        'dark': (
+            'foreground': color.get(system-base),
+            'background': color.get(grey-500),
+            'stroke': color.get(grey-300),
+        ),
+    ),
+    'white': (
+        'light': (
+            'foreground': color.get(base-black),
+            'background': color.get(base-white),
+            'stroke': color.get(base-white),
+        ),
+        'dark': (
+            'foreground': color.get(base-black),
+            'background': color.get(base-white),
+            'stroke': color.get(base-white),
+        ),
+    ),
+    'black': (
+        'light': (
+            'foreground': color.get(base-white),
+            'background': color.get(base-black),
+            'stroke': color.get(base-black),
+        ),
+        'dark': (
+            'foreground': color.get(base-white),
+            'background': color.get(base-black),
+            'stroke': color.get(base-black),
+        ),
+    ),
+    'base': (
+        'light': (
+            'foreground': color.get(system-invert),
+            'background': color.get(system-base),
+            'stroke': color.get(system-base),
+        ),
+        'dark': (
+            'foreground': color.get(system-invert),
+            'background': color.get(system-base),
+            'stroke': color.get(system-base),
+        ),
+    ),
+    'invert': (
+        'light': (
+            'foreground': color.get(system-base),
+            'background': color.get(system-invert),
+            'stroke': color.get(system-invert),
+        ),
+        'dark': (
+            'foreground': color.get(system-base),
+            'background': color.get(system-invert),
+            'stroke': color.get(system-invert),
+        ),
+    ),
+);
+
+.#{ $name } {
+    @include mixin.inline-flex;
+
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    position: relative;
+    border-radius: 50%;
+    cursor: pointer;
+
+    &::before,
+    &::after {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 50%;
+        z-index: 1;
+    }
+
+    &::before {
+        outline: size.rem(2) dashed;
+    }
+
+    &::after {
+        @include mixin.transition-style(extra-fast);
+
+        content: '';
+        background: color.get(base-black);
+        mix-blend-mode: soft-light;
+        opacity: 0;
+    }
+
+    &__image {
+        border-radius: 50%;
+    }
+
+    @each $size, $value in $avatar-sizes {
+        &--size-#{ $size } {
+            --avatar-size: #{$value};
+
+            .#{ $name } {
+                &__icon {
+                    --icon-size: calc(#{$value} - #{size.rem(4)});
+                    --icon-weight: 300;
+                }
+            }
+        }
+    }
+
+    @each $color, $shades in $avatar-colors {
+        @each $shade, $tokens in $shades {
+            &--color-#{$color} {
+                &.#{$name}--shade-#{$shade} {
+                    color: map.get($tokens, foreground);
+                    background-color: map.get($tokens, background);
+
+                    &::before {
+                        outline-color: map.get($tokens, stroke);
+                    }
+                }
+            }
+        }
+    }
+
+    @include mixin.hover {
+        &::after {
+            opacity: 1;
+        }
+    }
+
+    &--is {
+        &-selected {
+            &::before {
+                content: '';
+                animation: animate.$rotate-cw 10s linear infinite;
+            }
+        }
+
+        &-skeleton {
+            @include mixin.skeleton-loader;
+        }
+    }
+}

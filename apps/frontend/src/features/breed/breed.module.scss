@@ -1,3 +1,6 @@
+@use '../../styles/theming/sizes' as size;
+@use '../../styles/utils/mixins' as mixin;
+
 $name: 'PageBreed';
 
 .#{ $name } {
@@ -8,4 +11,8 @@ $name: 'PageBreed';
     justify-content: space-between;
     position: relative;
     padding-block: 7.5svh;
+
+    @include mixin.max-width(md) {
+        padding: 12svh 0 6svh;
+    }
 }

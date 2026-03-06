@@ -52,12 +52,12 @@ type TValueOf<T> = T[keyof T]
 /**
  * A helper type that sets the correct type for API responses.
  */
-type ApiResult<T> = { ok: true; data: T } | { ok: false; error: string }
+type TApiResult<T> = { ok: true; data: T } | { ok: false; error: string }
 // #endregion
 
 // #region - Exports
 export type {
-    ApiResult,
+    TApiResult,
     TColor,
     TNeutralColor,
     TSemanticColor,

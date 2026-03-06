@@ -1,0 +1,72 @@
+@use '../../../styles/theming/colors' as color;
+@use '../../../styles/theming/sizes' as size;
+@use '../../../styles/utils/mixins' as mixin;
+
+$name: 'UiUserDropdown';
+
+.#{$name} {
+    position: fixed;
+    top: size.rem(24);
+    right: size.rem(40);
+    padding-block: size.rem(8);
+    z-index: 100;
+
+    @include mixin.max-width(md) {
+        top: size.rem(12);
+        right: unset;
+        left: size.rem(20);
+    }
+
+    &__trigger {
+        @include mixin.flex($gap: size.rem(16));
+    }
+
+    &__options {
+        @include mixin.flex-column($gap: size.rem(4));
+        @include mixin.transform(scale(0.9));
+        @include mixin.transition-style(fast);
+
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        padding: size.rem(4);
+        background-color: color.alpha(system-invert, 0.2);
+        border-radius: size.rem(8);
+        backdrop-filter: blur(size.rem(10));
+        opacity: 0;
+        pointer-events: none;
+        transform-origin: top right;
+
+        @include mixin.max-width(md) {
+            background-color: color.get(system-base);
+        }
+
+        &-button {
+            @include mixin.transition-style(extra-fast);
+
+            padding: size.rem(8) size.rem(12);
+            background-color: transparent;
+            border: none;
+            border-radius: size.rem(6);
+            color: color.get(system-invert);
+            text-align: left;
+            cursor: pointer;
+
+            @include mixin.hover {
+                background-color: color.alpha(system-invert, 0.1);
+            }
+        }
+    }
+
+    &:hover {
+        .#{$name} {
+            &__options {
+                @include mixin.transform(scale(1));
+
+                pointer-events: all;
+                opacity: 1;
+            }
+        }
+    }
+}

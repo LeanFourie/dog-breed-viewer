@@ -17,7 +17,7 @@ type TDogBreedImagesMessage = string[]
 /**
  * A generic interface the represents the response for API calls made for the dog breed data.
  */
-interface IDogBreedsApiResponse<T> {
+interface IDogBreedsModel<T> {
     /**
      * The response message returned.
      * This is generic because the response message differs for different endpoints.
@@ -32,7 +32,7 @@ interface IDogBreedsApiResponse<T> {
 
 // #region - Exports
 export type {
-    IDogBreedsApiResponse,
+    IDogBreedsModel,
     TDogBreedsMessage,
     TDogBreedImageMessage,
     TDogBreedImagesMessage,

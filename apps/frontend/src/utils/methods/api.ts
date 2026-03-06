@@ -1,5 +1,6 @@
 // #region - Imports
-import type { ApiResult } from '../definitions/types'
+import type { IFetchJsonAuthOptions } from '../definitions/interfaces'
+import type { TApiResult } from '../definitions/types'
 // #endregion
 
 // #region - Variables
@@ -27,11 +28,28 @@ async function fetchJson<T>({
     options,
 }: {
     url: string
-    options?: RequestInit
-}): Promise<ApiResult<T>> {
+    options?: IFetchJsonAuthOptions
+}): Promise<TApiResult<T>> {
     try {
-        // Fetch the data from the endpoint
-        const res = await fetch(url, options)
+        const isAbsolute = /^https?:\/\//i.test(url)
+        let isCrossOrigin = false
+        if (typeof window !== 'undefined') {
+            try {
+                const target = new URL(url, window.location.origin)
+                isCrossOrigin = target.origin !== window.location.origin
+            } catch {}
+        }
+
+        const hasBody = !!options?.body
+        const headers = new Headers(options?.headers || {})
+        if (options?.authToken) headers.set('Authorization', `Bearer ${options.authToken}`)
+        if (hasBody && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json')
+
+        const res = await fetch(url, {
+            ...options,
+            headers,
+            credentials: options?.credentials ?? (isAbsolute && isCrossOrigin ? 'omit' : 'include'),
+        })
 
         // If the response failed...
         if (!res.ok) {
