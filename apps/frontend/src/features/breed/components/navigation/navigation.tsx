@@ -98,10 +98,6 @@ function PageBreedNavigation({ breedId, breedsList }: IPageHomeNavigationProps) 
             {_adjacentBreeds?.next ? (
                 <UiButton
                     className={css[`${name}__button`]}
-                    leadingIcon={{
-                        type: 'text',
-                        value: 'arrow_forward',
-                    }}
                     label={'Next'}
                     shade={'light'}
                     size={'lg'}
@@ -110,6 +106,10 @@ function PageBreedNavigation({ breedId, breedsList }: IPageHomeNavigationProps) 
                     type={'text'}
                     color={'white'}
                     shape={'circle'}
+                    trailingIcon={{
+                        type: 'text',
+                        value: 'arrow_forward',
+                    }}
                 />
             ) : null}
             {/* ./Next Button */}

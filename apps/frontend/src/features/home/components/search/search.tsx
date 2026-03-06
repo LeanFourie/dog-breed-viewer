@@ -48,18 +48,20 @@ function PageHomeSearch({ keyword, onSearch }: IPageHomeSearchProps) {
                 {/* ./Input */}
 
                 {/* Clear Button */}
-                <UiButton
-                    onClick={() => handleSearch('')}
-                    className={css[`${name}__cta`]}
-                    icon={{ type: 'text', value: 'close' }}
-                    label={'Go back'}
-                    shade={'light'}
-                    size={'sm'}
-                    tag={'button'}
-                    type={'icon'}
-                    color={'invert'}
-                    shape={'circle'}
-                />
+                {keyword !== '' ? (
+                    <UiButton
+                        onClick={() => handleSearch('')}
+                        className={css[`${name}__cta`]}
+                        icon={{ type: 'text', value: 'close' }}
+                        label={'Go back'}
+                        shade={'light'}
+                        size={'sm'}
+                        tag={'button'}
+                        type={'icon'}
+                        color={'invert'}
+                        shape={'circle'}
+                    />
+                ) : null}
                 {/* ./Clear Button */}
             </div>
         </div>

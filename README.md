@@ -1,105 +1,168 @@
-# New Nx Repository
+# Dog Breed Viewer
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A fullstack application built inside an NX monorepo. The frontend is built with [React](https://react.dev) and the backend is built with [NestJS](https://nestjs.com/).
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+## Table of Contents
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
-## Try the full Nx platform
-🚀 If you haven't connected to Nx Cloud yet, [complete your setup here](https://cloud.nx.app/setup/connect-workspace/guide). Get faster builds with remote caching, distributed task execution, and self-healing CI. [See how your workspace can benefit](#nx-cloud).
-## Generate a library
+1. [Installation](#installation)
+2. [Running the Application](#running-the-application)
+3. [Project Structure](#project-structure)
+4. [Technologies Used](#technologies-used)
+5. [Completed Features](#completed-features)
+6. [Missing Features](#missing-features)
+7. [Approaches](#approaches)
 
-```sh
-npx nx g @nx/js:lib packages/pkg1 --publishable --importPath=@my-org/pkg1
+## Installation
+
+To install the project, follow these steps:
+
+1. Install NX globally: `npm add --global nx`. Read more about NX installation [here](https://nx.dev/docs/getting-started/installation).
+2. Clone the repository
+3. Navigate to the project directory
+4. Install dependencies: `npm install`
+
+## Running the Application
+
+To run the application, follow these steps:
+
+1. Start the backend server: `npx nx server @org/backend`
+2. Start the frontend application: `npx nx server @org/frontend`
+3. Navigate to `http://localhost:4200` in your browser to access the application
+
+You can also run the following...
+
+#### Storybook:
+
+1. Run `npx nx run @org/frontend:storybook --port=5200` in the terminal
+2. Navigate to `http://localhost:5200` in your browser to access Storybook
+
+#### Unit Testing:
+
+1. Run `npx nx run @org/frontend:test` in the terminal
+
+## Project Structure
+
+The project is structured as an NX monorepo with the following apps:
+
+-   `backend`: The backend server built with NestJS
+-   `frontend`: The frontend application built with React
+
+## Technologies Used
+
+-   [React](https://react.dev)
+-   [NestJS](https://nestjs.com/)
+-   [NX](https://nx.dev/)
+-   [TypeScript](https://www.typescriptlang.org/)
+-   [Vite](https://vitejs.dev/)
+-   [Storybook](https://storybook.js.org/)
+-   [SCSS](https://sass-lang.com/)
+
+## Completed Features
+
+| Feature                         | Required | Implemented |
+| ------------------------------- | -------- | ----------- |
+| Fetch and Display Breed List    | 🟢       | 🟢          |
+| Select a Breed and View Images  | 🟢       | 🟢          |
+| Add a search/filter input field | 🟢       | 🟢          |
+| Handle API Errors               | 🟢       | 🟢          |
+| Dynamic Updates                 | 🟢       | 🟢          |
+| Loading States                  | 🟢       | 🟢          |
+| Rate Limits                     | 🟡       | 🟠          |
+| Cache                           | 🟡       | 🟠          |
+| Unit Testing                    | 🟡       | 🟢          |
+| User Auth                       | 🟡       | 🟢          |
+| Create a Server                 | 🟠       | 🟢          |
+| GET API Endpoint                | 🟠       | 🟢          |
+| POST API Endpoint               | 🟠       | 🟢          |
+| DELETE API Endpoint             | 🟠       | 🟢          |
+| Data Persistence                | 🟠       | 🟢          |
+| "Favourite" Functionality       | 🟠       | 🟢          |
+| Display Favourites              | 🟠       | 🟢          |
+| "Un-Favourite" Functionality    | 🟠       | 🟢          |
+| Mobile Responsiveness           | 🔴       | 🟢          |
+| 404 Page                        | 🔴       | 🟢          |
+
+## Missing Features
+
+| Feature             | Reason                                                                                                                                       |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| ARIA Attributes     | Although implemented in some places, it was low priority for this project.                                                                   |
+| Shareable TS Models | In order to keep consistency between the frontend and backend, shareable TS models would be nice, but it is not a priority for this project. |
+| Light/Dark Mode     | The basis was built for this, but some colors are not accessible. Did not spend time fixing this as it is not a priority for this project.   |
+
+## Approaches
+
+### Frontend
+
+#### Architecture
+
+```
+|- frontend
+|  |- app
+|  |- components
+|     |- {{ CATEGORY }}
+|        |- {{ COMPONENT }}
+|  |- features
+|     |- {{ FEATURE }}
+|        |- {{ SUB_FEATURE }} (If applicable)
+|        |- components (Responsible for components specific to this feature)
+|           |- {{ COMPONENT }}
+|  |- layouts
+|     |- {{ LAYOUT }}
+|  |- providers
+|     |- {{ PROVIDER }}
+|  |- styles
+|     |- {{ STYLE }}
+|  |- utils
+|    |- definitions
+|    |- methods
+|    |- models
+|    |- routes
 ```
 
-## Run tasks
+| Folder                                            | Usage                                                                               |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| app                                               | Responsible for managing the application state and routing                          |
+| components                                        | Responsible for reusable UI components                                              |
+| components/{{ CATEGORY }}                         | Hosts all reusable components related by type (action, feedback, form, etc.)        |
+| components/{{ CATEGORY }}/{{ COMPONENT }}         | Hosts the component files (e.g. {{ COMPONENT }}.tsx, {{ COMPONENT }}.module.scss)   |
+| features                                          | Responsible for application features                                                |
+| features/{{ FEATURE }}                            | Hosts all files related to the feature (e.g. breeds, auth, etc.)                    |
+| features/{{ FEATURE }}/{{ SUB_FEATURE }}          | Hosts all files related to the sub-feature (e.g. login, register, etc.)             |
+| features/{{ FEATURE }}/components                 | Hosts all components specific to the feature (e.g. breed list, breed details, etc.) |
+| features/{{ FEATURE }}/components/{{ COMPONENT }} | Hosts the component files (e.g. {{ COMPONENT }}.tsx, {{ COMPONENT }}.module.scss)   |
+| layouts                                           | Responsible for application layouts                                                 |
+| layouts/{{ LAYOUT }}                              | Hosts the layout files (e.g. {{ LAYOUT }}.tsx, {{ LAYOUT }}.module.scss)            |
+| providers                                         | Responsible for application state management                                        |
+| providers/{{ PROVIDER }}                          | Hosts the provider files (e.g. {{ PROVIDER }}.tsx, {{ PROVIDER }}.definitions.ts)   |
+| styles                                            | Responsible for application styles                                                  |
+| utils                                             | Responsible for global functions, variables and definitions                         |
+| utils/definitions                                 | Hosts all shareable interfaces and type definitions                                 |
+| utils/methods                                     | Hosts all shareable methods                                                         |
+| utils/models                                      | Hosts all shareable API models definitions                                          |
+| utils/routes                                      | Hosts all shareable route structures                                                |
 
-To build the library use:
+#### Design
 
-```sh
-npx nx build pkg1
+Instead of a dashboard view, the layout is based on a searchable index. Infinite scrolling was introduced in order to improve the user experience. The index is sorted by breed name to make it easier for users to find the breed they are looking for. A background image was added in order to give a visual indicator of the currently focused breed. This image preview will allow users to quickly decide which breed they want to view more information about.
+
+The breed details page has horizontal scrolling to allow users to view more images of the selected breed. The scroll is also infinite which makes cycling between the images a smooth experience.
+
+A small count indicator was added to the favourites button to show the user how many breeds they have favourited. This is also used to confirm the user's action when they click the favourite button.
+
+A full page error is shown when the breeds cannot be loaded. The application has no purpose without the breed data, hence hiding all other components is required so users do not get frustrated with broken UI.
+
+### Backend
+
+#### Architecture
+
+```
+|- backend
+|  |- app
+|     |- {{ FEATURE }}
 ```
 
-To run any task with Nx use:
-
-```sh
-npx nx <target> <project-name>
-```
-
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Versioning and releasing
-
-To version and release the library use
-
-```
-npx nx release
-```
-
-Pass `--dry-run` to see what would happen without actually releasing the library.
-
-[Learn more about Nx release &raquo;](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Keep TypeScript project references up to date
-
-Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
-
-To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
-
-```sh
-npx nx sync
-```
-
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
-
-```sh
-npx nx sync:check
-```
-
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
-
-## Nx Cloud
-
-Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Set up CI (non-Github Actions CI)
-
-**Note:** This is only required if your CI provider is not GitHub Actions.
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+| Folder            | Usage                                                                            |
+| ----------------- | -------------------------------------------------------------------------------- |
+| app               | Responsible for managing the application state and routing                       |
+| app/{{ FEATURE }} | Hosts all files related to the feature (e.g. auth.controller.ts, auth.module.ts) |
