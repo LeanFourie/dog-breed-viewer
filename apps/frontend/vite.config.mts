@@ -10,7 +10,7 @@ export default defineConfig(() => ({
         host: 'localhost',
         proxy: {
             '/api': {
-                target: 'http://localhost:3000',
+                target: process.env.VITE_API_AUTH_URL,
                 changeOrigin: true,
                 secure: false,
             },

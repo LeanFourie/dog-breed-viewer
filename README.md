@@ -20,6 +20,17 @@ To install the project, follow these steps:
 2. Clone the repository
 3. Navigate to the project directory
 4. Install dependencies: `npm install`
+5. Add an `.env` file to the root of the frontend app with the following content:
+
+    ```
+    VITE_API_BASE_URL=https://dog.ceo/api
+    VITE_API_AUTH_URL=http://localhost:3000
+    ```
+6. Add an `.env` file to the root of the backend app with the following content:
+
+    ```
+    DUMMY_JSON_API_URL=https://dummyjson.com
+    ```
 
 ## Running the Application
 
