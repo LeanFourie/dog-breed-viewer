@@ -1,0 +1,62 @@
+@use '../../styles/theming/fonts' as font;
+@use '../../styles/theming/sizes' as size;
+@use '../../styles/utils/mixins' as mixin;
+
+$name: 'PageFavourites';
+
+.#{ $name } {
+    min-height: 100svh;
+    padding: size.rem(40);
+
+    @include mixin.max-width(md) {
+        padding: size.rem(100) size.rem(20) size.rem(40);
+    }
+
+    &__header {
+        @include mixin.flex($gap: size.rem(28), $justify-content: flex-start);
+
+        margin-bottom: size.rem(40);
+
+        &-title {
+            font-family: font.family(secondary), 'sans-serif';
+
+            @include mixin.max-width(md) {
+                font-size: 7svw;
+            }
+        }
+    }
+
+    &__loader {
+        @include mixin.flex();
+
+        width: 100%;
+        height: 100%;
+    }
+
+    &__list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(size.rem(252), 1fr));
+        gap: 1rem;
+    }
+
+    &__item {
+        position: relative;
+        border-radius: size.rem(12);
+        overflow: hidden;
+
+        &-action {
+            position: absolute;
+            top: size.rem(4);
+            right: size.rem(4);
+            z-index: 10;
+
+            &--is {
+                &-favourite {
+                    span {
+                        --icon-fill: 1;
+                    }
+                }
+            }
+        }
+    }
+}

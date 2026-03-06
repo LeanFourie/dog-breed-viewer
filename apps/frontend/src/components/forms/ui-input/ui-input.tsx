@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, useState } from 'react'
 import { UiIcon } from '../../base/ui-icon/ui-icon'
 import { UiText } from '../../base/ui-text/ui-text'
 import { UiLoader } from '../../feedback/ui-loader/ui-loader'
@@ -79,6 +79,13 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
     const Suffix = suffix?.onClick ? 'button' : 'div'
     // #endregion
 
+    // #region - State
+    /**
+     * Whether the password should be revealed or not.
+     */
+    const [_showPassword, setShowPassword] = useState(false)
+    // #endregion
+
     // #region - Methods
     /**
      * Handles value change events on the input.
@@ -145,6 +152,12 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
 
         // Emit the event with the new value
         onValueIncrement(`${newValue}`)
+    }
+    /**
+     * Toggles the password reveal state.
+     */
+    const handlePasswordReveal = (): void => {
+        setShowPassword(show => !show)
     }
     // #endregion
 
@@ -241,7 +254,7 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
                     readOnly={isReadonly}
                     required={requirement === 'required'}
                     step={step}
-                    type={type}
+                    type={type === 'password' && _showPassword ? 'text' : type}
                     value={value}
                     aria-invalid={state === 'danger'}
                 />
@@ -281,6 +294,26 @@ const UiInput = forwardRef<HTMLInputElement, TUiInputProps>(function UiInput(
                     </LeadingIcon>
                 )}
                 {/* ./Increment Button */}
+
+                {/* Password Reveal Button */}
+                {type === 'password' && (
+                    <LeadingIcon
+                        onMouseDown={() => handlePasswordReveal()}
+                        onMouseUp={() => handlePasswordReveal()}
+                        className={`
+                            ${css[`${name}__icon`]}
+                            ${css[`${name}__icon--trailing`]}
+                            ${css[`${name}__icon--clickable`]}
+                        `}
+                    >
+                        <UiIcon
+                            className={css[`${name}__icon-element`]}
+                            type={'text'}
+                            value={_showPassword ? 'visibility_off' : 'visibility'}
+                        />
+                    </LeadingIcon>
+                )}
+                {/* ./Password Reveal Button */}
 
                 {/* Trailing Icon */}
                 {!!trailingIcon && (

@@ -58,8 +58,8 @@ function PageBreedDetails({ breedId }: IPageBreedDetailsProps) {
                 {/* Title */}
                 <UiText
                     className={css[`${name}__title`]}
-                    size="lg"
-                    variant="h1"
+                    size={'lg'}
+                    variant={'h1'}
                 >
                     {breedDetails.fullName}
                 </UiText>

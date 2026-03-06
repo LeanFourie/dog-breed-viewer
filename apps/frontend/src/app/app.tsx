@@ -1,11 +1,7 @@
-import { ProtectedRoute, UiEmptyPage } from '../components'
-import { PageBreed, PageHome, PageLogin } from '../features'
-import {
-    AuthProvider,
-    BreedProvider,
-    BreedsProvider,
-    NotificationProvider,
-} from '../providers'
+import { UiEmptyPage } from '../components'
+import { LayoutDashboard } from '../layouts'
+import { PageBreed, PageHome, PageLogin, PageFavourites } from '../features'
+import { AuthProvider, NotificationProvider } from '../providers'
 import { ROUTES } from '../utils/routes/routes'
 import css from './app.module.scss'
 import Lenis from 'lenis'
@@ -41,10 +37,6 @@ export function App() {
             lenis.destroy()
         }
     }, [])
-    useEffect(() => {
-  fetch('/api')
-    .then(res => res.json())
-}, [])
     // #endregion
 
     // #region - Markup
@@ -58,11 +50,9 @@ export function App() {
                         <Route
                             path={ROUTES.Home}
                             element={
-                                <BreedsProvider>
-                                    <ProtectedRoute>
-                                        <PageHome />
-                                    </ProtectedRoute>
-                                </BreedsProvider>
+                                <LayoutDashboard>
+                                    <PageHome />
+                                </LayoutDashboard>
                             }
                         />
                         {/* ./Home */}
@@ -70,16 +60,22 @@ export function App() {
                         <Route
                             path={ROUTES.Breed}
                             element={
-                                <BreedsProvider>
-                                    <ProtectedRoute>
-                                        <BreedProvider>
-                                            <PageBreed />
-                                        </BreedProvider>
-                                    </ProtectedRoute>
-                                </BreedsProvider>
+                                <LayoutDashboard>
+                                    <PageBreed />
+                                </LayoutDashboard>
                             }
                         />
                         {/* ./Breed */}
+                        {/* Favourites */}
+                        <Route
+                            path={ROUTES.Favourites}
+                            element={
+                                <LayoutDashboard>
+                                    <PageFavourites />
+                                </LayoutDashboard>
+                            }
+                        />
+                        {/* ./Favourites */}
 
                         {/* PUBLIC ROUTES */}
                         {/* Login */}

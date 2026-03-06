@@ -101,9 +101,6 @@ const BreedsProvider = ({ children }: React.PropsWithChildren) => {
                     state: 'danger',
                 })
 
-                // Remove the loader
-                _setIsLoading(false)
-
                 // Set the API error to render
                 _setApiError(breeds.error)
 
@@ -129,9 +126,6 @@ const BreedsProvider = ({ children }: React.PropsWithChildren) => {
             // Store the associated states
             _setAllBreeds(formattedBreeds)
 
-            // Remove the loader
-            _setIsLoading(false)
-
             // Return the final list of breeds
             return formattedBreeds
         } catch (error) {
@@ -141,14 +135,15 @@ const BreedsProvider = ({ children }: React.PropsWithChildren) => {
                 state: 'danger',
             })
 
-            // Remove the loader
-            _setIsLoading(false)
-
             // Set the API error to render
             _setApiError(`${error}`)
 
             // Return an empty list
             return []
+        } finally {
+            // Set the loading state to false
+            // This is so we can hide the loading indicator
+            _setIsLoading(false)
         }
     }
     /**

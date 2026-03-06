@@ -1,12 +1,18 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { UiImage, UiLoader } from '../../../../components'
+import { UiButton, UiImage, UiLoader } from '../../../../components'
 import { type IPageHomeImagesProps } from './images.definitions'
 import css from './images.module.scss'
 import Lenis from 'lenis'
 
-function PageBreedImages({ breedId, images, isLoading }: IPageHomeImagesProps) {
+function PageBreedImages({
+    breedId,
+    images,
+    isLoading,
+    favourites,
+    toggleFavourite,
+}: IPageHomeImagesProps) {
     // #region - Variables
     /**
      * The name of the component used for styling and identification in the DOM inspector.
@@ -104,15 +110,48 @@ function PageBreedImages({ breedId, images, isLoading }: IPageHomeImagesProps) {
             {images?.length > 0 && !isLoading ? (
                 <div className={css[`${name}__list`]}>
                     {[...images, ...images, ...images].map((image, index) => (
-                        <UiImage
-                            alt={breedId}
-                            aspectRatio={'4:3'}
-                            className={css[`${name}__list-item`]}
-                            fit={'cover'}
-                            key={index}
-                            orientation={'portrait'}
-                            src={image}
-                        />
+                        <div className={css[`${name}__list-item`]} key={index}>
+                            {/* Image */}
+                            <UiImage
+                                alt={breedId}
+                                aspectRatio={'4:3'}
+                                className={css[`${name}__list-item-image`]}
+                                fit={'cover'}
+                                orientation={'portrait'}
+                                src={image}
+                                style={{ width: '100%', height: '100%' }}
+                            />
+                            {/* ./Image */}
+                            {/* Button */}
+                            <UiButton
+                                onClick={() => toggleFavourite(image)}
+                                key={index}
+                                className={`
+                                    ${css[`${name}__list-item-action`]}
+                                    ${
+                                        favourites.includes(image)
+                                            ? css[
+                                                  `${name}__list-item-action--is-favourite`
+                                              ]
+                                            : ''
+                                    }
+                                `}
+                                color={
+                                    favourites.includes(image)
+                                        ? 'danger'
+                                        : 'base'
+                                }
+                                icon={{
+                                    type: 'text',
+                                    value: 'favorite',
+                                }}
+                                label={'Favourite'}
+                                tag={'button'}
+                                type={'icon'}
+                                variant={'filled'}
+                            />
+                            {/* ./Button */}
+                        </div>
                     ))}
                 </div>
             ) : null}

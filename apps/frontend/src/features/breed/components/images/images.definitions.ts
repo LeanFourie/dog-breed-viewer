@@ -1,5 +1,5 @@
 // #region - Imports
-import type { IBreedContext } from '../../../../providers'
+import type { IBreedContext, IFavouritesContext } from '../../../../providers'
 // #endregion
 
 // #region - Interfaces
@@ -19,6 +19,14 @@ interface IPageHomeImagesProps {
      * The list of images for the selected dog breed.
      */
     isLoading: IBreedContext['isLoading']
+    /**
+     * The list of favourite images.
+     */
+    favourites: IFavouritesContext['favourites']
+    /**
+     * Toggle a favourite image.
+     */
+    toggleFavourite: IFavouritesContext['toggleFavourite']
 }
 // #endregion
 

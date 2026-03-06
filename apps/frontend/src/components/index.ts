@@ -21,6 +21,4 @@ export * from './pages/error-page/error-page-error'
 
 // Patterns
 export * from './patterns/brand/brand'
-export * from './patterns/protected-route/protected-route'
-export * from './patterns/protected-route/protected-route'
 export * from './patterns/user-dropdown/user-dropdown'

@@ -1,3 +1,4 @@
+@use '../../../../styles/theming/sizes' as size;
 @use '../../../../styles/utils/mixins' as mixin;
 
 $name: 'PageBreedImages';
@@ -33,11 +34,64 @@ $name: 'PageBreedImages';
         }
 
         &-item {
-            &:nth-child(3n) {
-                @include mixin.transform(scale(0.6));
+            position: relative;
+
+            &-image {
+                border-radius: size.rem(8);
             }
+
+            &-action {
+                position: absolute;
+                top: size.rem(4);
+                right: size.rem(4);
+                z-index: 10;
+
+                &--is {
+                    &-favourite {
+                        span {
+                            --icon-fill: 1;
+                        }
+                    }
+                }
+            }
+
+            &:nth-child(3n) {
+                .#{ $name } {
+                    &__list {
+                        &-item {
+                            &-image {
+                                @include mixin.transform(scale(0.6));
+
+                                border-radius: size.rem(16);
+                            }
+
+                            &-action {
+                                top: calc(19.5% + #{size.rem(4)});
+                                right: calc(20% + #{size.rem(4)});
+                            }
+                        }
+                    }
+                }
+            }
+
             &:nth-child(3n - 1) {
-                @include mixin.transform(translateX(10%) scale(0.8));
+                .#{ $name } {
+                    &__list {
+                        &-item {
+                            &-image {
+                                @include mixin.transform(
+                                    translateX(10%) scale(0.8)
+                                );
+
+                                border-radius: size.rem(9);
+                            }
+
+                            &-action {
+                                top: calc(9.5% + #{size.rem(4)});
+                            }
+                        }
+                    }
+                }
             }
         }
     }

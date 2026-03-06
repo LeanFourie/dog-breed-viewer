@@ -13,16 +13,17 @@ $name: 'UiSnackbar';
             transition.timing-function('ease-in-cubic')
     );
 
-    max-width: size.rem(260);
+    max-width: size.rem(320);
     position: fixed;
     bottom: size.rem(16);
-    right: size.rem(16);
+    left: size.rem(16);
     padding: size.rem(4) size.rem(4) size.rem(4) size.rem(16);
     border-radius: size.rem(8);
     color: color.get(system-base);
     z-index: 100;
 
     &__message {
+        margin-block: size.rem(12);
         flex: 1;
     }
 

@@ -90,9 +90,6 @@ const BreedProvider = ({ children }: React.PropsWithChildren) => {
                     state: 'danger',
                 })
 
-                // Remove the loader
-                _setIsLoading(false)
-
                 // Return an empty array so we do not crash the UI
                 return []
             }
@@ -103,17 +100,11 @@ const BreedProvider = ({ children }: React.PropsWithChildren) => {
                 [breed]: images.data.message,
             })
 
-            // Remove the loader
-            _setIsLoading(false)
-
             // Return the images
             return images.data.message
         } catch (error) {
             // Log the error for debugging
             console.error('Failed to fetch breed images', error)
-
-            // Remove the loader
-            _setIsLoading(false)
 
             // Show an error message if the API request fails
             notificationContext?.addSnackbar({
@@ -123,6 +114,10 @@ const BreedProvider = ({ children }: React.PropsWithChildren) => {
 
             // Return an empty array so we do not crash the UI
             return []
+        } finally {
+            // Set the loading state to false
+            // This is so we can hide the loading indicator
+            _setIsLoading(false)
         }
     }
     // #endregion

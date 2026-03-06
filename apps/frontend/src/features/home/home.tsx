@@ -47,18 +47,26 @@ function PageHome() {
      * Restores the scroll position of the home page when the component mounts.
      */
     useEffect(() => {
+        // Fetch the saved scroll position from session storage
         const savedScrollPosition = sessionStorage.getItem(
             HOME_SCROLL_POSITION_KEY
         )
+
+        // If no saved scroll position exists, exit the effect
+        // We can't restore the scroll position if it's not a valid number
         if (!savedScrollPosition) return
 
+        // Parse the saved scroll position as a number
         const scrollTop = Number(savedScrollPosition)
         if (Number.isNaN(scrollTop)) return
 
+        // Use requestAnimationFrame to ensure the scroll position is applied after the render cycle
         requestAnimationFrame(() => {
             window.scrollTo({ top: scrollTop })
         })
 
+        // Remove the saved scroll position from session storage after restoring it 
+        // This ensures that the scroll position is only restored once
         sessionStorage.removeItem(HOME_SCROLL_POSITION_KEY)
     }, [])
     /**

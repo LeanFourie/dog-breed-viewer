@@ -1,7 +1,7 @@
 'use client'
 
 import { UiEmptyPage } from '../../components'
-import { BreedContext, BreedsContext } from '../../providers'
+import { BreedContext, BreedsContext, FavouritesContext } from '../../providers'
 import { stringToKey } from '../../utils/methods/strings'
 import css from './breed.module.scss'
 import {
@@ -10,7 +10,7 @@ import {
     PageBreedNavigation,
 } from './components'
 import { useParams } from 'react-router-dom'
-import { use, useEffect } from 'react'
+import { use, useEffect, useRef } from 'react'
 
 function PageBreed() {
     // #region - Variables
@@ -33,6 +33,14 @@ function PageBreed() {
      * The context for the breeds list.
      */
     const breedsContext = use(BreedsContext)
+    /**
+     * The context for the favourites list.
+     */
+    const favouritesContext = use(FavouritesContext)
+    /**
+     * Ref to track the last fetched breed ID to prevent double fetching
+     */
+    const fetchedIdRef = useRef<string | null>(null)
     // #endregion
 
     // #region - Effects
@@ -40,7 +48,9 @@ function PageBreed() {
      * Fetches the breed details and images when the breed ID changes.
      */
     useEffect(() => {
-        if (!id) return
+        if (!id || (id && fetchedIdRef.current === id)) return
+
+        fetchedIdRef.current = id
 
         breedsContext?.fetchBreeds()
         breedContext?.fetchBreedImages({ breed: id })
@@ -67,6 +77,10 @@ function PageBreed() {
                 breedId={id}
                 images={breedContext?.selectedBreedImages ?? []}
                 isLoading={breedContext?.isLoading ?? false}
+                favourites={favouritesContext?.favourites ?? []}
+                toggleFavourite={
+                    favouritesContext?.toggleFavourite ?? (async () => {})
+                }
             />
             {/* ./Images */}
 

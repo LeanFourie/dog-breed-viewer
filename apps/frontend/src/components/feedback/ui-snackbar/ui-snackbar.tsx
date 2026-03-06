@@ -39,9 +39,7 @@ function UiSnackbar({
             {/* Message */}
             <UiText
                 className={css[`${name}__message`]}
-                renderAs={'p'}
                 size={'sm'}
-                variant={'label'}
                 weight={'medium'}
             >
                 {message}

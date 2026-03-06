@@ -1,0 +1,12 @@
+@use '../../styles/utils/mixins' as mixin;
+
+$name: 'LayoutDashboard';
+
+.#{ $name } {
+    &__loader {
+        @include mixin.flex;
+
+        width: 100%;
+        min-height: 100svh;
+    }
+}
