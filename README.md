@@ -26,7 +26,7 @@ To install the project, follow these steps:
 To run the application, follow these steps:
 
 1. Start the backend server: `npx nx serve @org/backend`
-2. Start the frontend application: `npx nx serve @org/frontend`
+2. Start the frontend application: `npx nx dev @org/frontend`
 3. Navigate to `http://localhost:4200` in your browser to access the application
 
 You can also run the following...
