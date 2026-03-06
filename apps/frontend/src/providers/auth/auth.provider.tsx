@@ -36,7 +36,19 @@ const AuthProvider = ({ children }: React.PropsWithChildren) => {
     const location = useLocation()
     // #endregion
 
-    // #region - States
+    // #region - Methods
+    /**
+     * Cleans up the authentication state by removing the user,
+     * broadcasting the logout event, and navigating to the login page.
+     */
+    const cleanUpAuth = () => {
+        _setUser(null)
+        localStorage.setItem(
+            AUTH_EVENT_KEY,
+            JSON.stringify({ type: 'logout', timestamp: Date.now() })
+        )
+        navigate(ROUTES.Login)
+    }
     /**
      * Fetches JSON data from the server with optional authentication.
      * @param url - The URL to fetch data from.
@@ -82,6 +94,8 @@ const AuthProvider = ({ children }: React.PropsWithChildren) => {
                     url,
                     options: { ...options, headers, credentials: 'include' },
                 })
+            } else {
+                cleanUpAuth()
             }
         }
 
@@ -193,17 +207,7 @@ const AuthProvider = ({ children }: React.PropsWithChildren) => {
             // Log any errors that occur during logout
             console.error('Logout failed:', err)
         } finally {
-            // Set the user state to null to indicate the user is logged out
-            _setUser(null)
-
-            // Broadcast logout event
-            localStorage.setItem(
-                AUTH_EVENT_KEY,
-                JSON.stringify({ type: 'logout', timestamp: Date.now() })
-            )
-
-            // Navigate to the login page to clear the session
-            navigate(ROUTES.Login)
+            cleanUpAuth()
         }
     }
     // #endregion
@@ -262,7 +266,10 @@ const AuthProvider = ({ children }: React.PropsWithChildren) => {
             // Set the loading state to true while we are refreshing the token
             _setIsLoading(true)
             // Refresh the token if we think the user is logged in
-            await refreshToken()
+            const token = await refreshToken()
+            if (!token && isLikelyLoggedIn) {
+                cleanUpAuth()
+            }
             // Set the loading state to false after we have refreshed the token
             _setIsLoading(false)
         }
